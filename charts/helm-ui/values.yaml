@@ -1,0 +1,17 @@
+app:
+  name: helm-ui
+  port: 8080
+
+tiller:
+  host: tiller-deploy.kube-system.svc.cluster.local:44134
+
+image:
+  registry: docker.io
+  org: ultimateboy
+  name: helm-ui
+  tag: canary
+
+  # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
+  pullPolicy: Always
+
+

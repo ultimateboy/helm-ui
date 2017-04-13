@@ -1,0 +1,3 @@
+name: helm-ui
+description: Provides a User Interface on top of Helm
+version: 0.1.0

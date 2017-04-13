@@ -1,0 +1,6 @@
+package: github.com/kubernetes-incubator/helm-ui
+import:
+- package: k8s.io/helm
+  version: ~2.3.1
+  subpackages:
+  - pkg/helm
