@@ -14,3 +14,4 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: {{ .Values.app.port }}
+  type: {{ .Values.app.serviceType }}

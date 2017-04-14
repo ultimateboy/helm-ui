@@ -1,6 +1,7 @@
 app:
   name: helm-ui
   port: 8080
+  serviceType: LoadBalancer
 
 tiller:
   host: tiller-deploy.kube-system.svc.cluster.local:44134
@@ -13,5 +14,3 @@ image:
 
   # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
   pullPolicy: Always
-
-

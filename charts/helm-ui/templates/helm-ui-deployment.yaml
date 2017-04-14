@@ -25,6 +25,8 @@ spec:
         image: {{ .Values.image.registry }}/{{ .Values.image.org }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+        - name: PORT
+          value: {{ .Values.app.port | quote }}
         - name: TILLER_HOST
           value: {{ .Values.tiller.host }}
         command: 
