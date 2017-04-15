@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"k8s.io/helm/pkg/helm"
+	"k8s.io/helm/pkg/repo"
 )
 
 type HelmClient struct {
@@ -43,6 +44,25 @@ func (c HelmClient) listReleases(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	client := NewHelmClient(os.Getenv("TILLER_HOST"))
+
+	//cif := home.CacheIndex(name)
+	c := repo.Entry{
+		Name: "kubernetes/stable",
+		//Cache: cif,
+		URL: "https://kubernetes-charts.storage.googleapis.com/",
+		//CertFile: certFile,
+		//KeyFile:  keyFile,
+		//CAFile:   caFile,
+	}
+
+	r, err := repo.NewChartRepository(&c)
+	if err != nil {
+		log.Fatalf("failed to get new chart repo: %v", err)
+	}
+	err = r.DownloadIndexFile("/some/cache/path")
+	if err != nil {
+		log.Fatalf("failed to download chart index file: %v", err)
+	}
 
 	http.HandleFunc("/", client.listReleases)
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil)
