@@ -1,8 +1,40 @@
-hash: 2598f35c31c4465ab02c25a09149975b604e8ab3a8341064220a922f2b1946d6
-updated: 2017-04-13T16:19:16.597110082-06:00
+hash: 72fe8d81ba5e9214188e9af0fb00f6c97d5860aa284920a7cb87d30d26513195
+updated: 2017-04-18T16:25:05.790707141-06:00
 imports:
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
+- name: github.com/ericchiang/k8s
+  version: bd3351b0ceb817083a3226c152e3a2c9bb2849c9
+  subpackages:
+  - api/v1
+  - apis/meta/v1
+  - api/unversioned
+  - apis/apps/v1alpha1
+  - apis/apps/v1beta1
+  - apis/authentication/v1
+  - apis/authentication/v1beta1
+  - apis/authorization/v1
+  - apis/authorization/v1beta1
+  - apis/autoscaling/v1
+  - apis/autoscaling/v2alpha1
+  - apis/batch/v1
+  - apis/batch/v2alpha1
+  - apis/certificates/v1alpha1
+  - apis/certificates/v1beta1
+  - apis/extensions/v1beta1
+  - apis/imagepolicy/v1alpha1
+  - apis/policy/v1alpha1
+  - apis/policy/v1beta1
+  - apis/rbac/v1alpha1
+  - apis/rbac/v1beta1
+  - apis/settings/v1alpha1
+  - apis/storage/v1
+  - apis/storage/v1beta1
+  - runtime
+  - watch/versioned
+  - api/resource
+  - runtime/schema
+  - util/intstr
 - name: github.com/facebookgo/symwalk
   version: 42004b9f322246749dd73ad71008b1f3160c0052
 - name: github.com/ghodss/yaml
@@ -11,11 +43,11 @@ imports:
   version: bea32b9cd2d6f55753d94a28e959b13f0244797a
   subpackages:
   - compiler
-  - match
   - syntax
+  - match
   - syntax/ast
-  - syntax/lexer
   - util/runes
+  - syntax/lexer
   - util/strings
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
@@ -25,6 +57,10 @@ imports:
   - proto
   - ptypes/any
   - ptypes/timestamp
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/mux
+  version: 392c28fe23e1c45ddba891b0320b3b5df220beea
 - name: github.com/Masterminds/semver
   version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
 - name: github.com/naoina/go-stringutil
@@ -36,36 +72,36 @@ imports:
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
-  - context
   - http2
+  - context
   - http2/hpack
-  - internal/timeseries
   - lex/httplex
   - trace
+  - internal/timeseries
 - name: google.golang.org/grpc
   version: b7f1379d3cbbbeb2ca3405852012e237aa05459e
   subpackages:
-  - codes
   - credentials
+  - metadata
+  - codes
   - grpclog
   - internal
-  - metadata
   - naming
-  - peer
   - transport
+  - peer
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/helm
   version: 32562a3040bb5ca690339b9840b6f60f8ce25da4
   subpackages:
-  - pkg/chartutil
   - pkg/helm
-  - pkg/ignore
+  - pkg/chartutil
   - pkg/proto/hapi/chart
   - pkg/proto/hapi/release
   - pkg/proto/hapi/services
-  - pkg/proto/hapi/version
   - pkg/version
+  - pkg/ignore
+  - pkg/proto/hapi/version
 - name: k8s.io/kubernetes
   version: ea8f6637b639246faa14a8d5c6f864100fcb77a9
   subpackages:

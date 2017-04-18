@@ -1,16 +1,26 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
+	"github.com/ericchiang/k8s"
+	"github.com/ericchiang/k8s/api/v1"
 	"github.com/gorilla/mux"
 
+	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
 	"k8s.io/helm/pkg/helm"
+)
+
+var (
+	K8sClient       *k8s.Client
+	HELMUIConfigMap = "helmui"
 )
 
 type HelmClient struct {
@@ -39,6 +49,51 @@ type HelmRepo struct {
 	URL  string
 }
 
+func SaveRepo(client *k8s.Client, r HelmRepo) error {
+	// need to deal with the namespacing at some point
+	namespace := "default"
+	ctx := context.Background()
+	// try to get teh config map and create it if it does not
+	configMap, err := client.CoreV1().GetConfigMap(ctx, HELMUIConfigMap, namespace)
+	if err != nil {
+
+		if !strings.Contains(err.Error(), fmt.Sprintf(`configmaps "%s" not found`, HELMUIConfigMap)) {
+			return err
+		}
+
+		cfgmap := &v1.ConfigMap{
+			Metadata: &metav1.ObjectMeta{
+				Name:      &HELMUIConfigMap,
+				Namespace: &namespace,
+			},
+		}
+
+		configMap, err = client.CoreV1().CreateConfigMap(ctx, cfgmap)
+		if err != nil {
+			return err
+		}
+	}
+
+	// dont save the repo if one exists by that name already
+	if val, ok := configMap.Data[r.Name]; ok {
+		return fmt.Errorf("A helm repo with the name '%s' is already in the system pointing to: %s", r.Name, val)
+	}
+
+	// if this config map is brand new then the data map needs to be initalized
+	if configMap.Data == nil {
+		configMap.Data = map[string]string{}
+	}
+	// now save the new repo url
+	configMap.Data[r.Name] = r.URL
+
+	_, err = client.CoreV1().UpdateConfigMap(ctx, configMap)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func AddHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var newRepo HelmRepo
@@ -48,14 +103,25 @@ func AddHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	io.WriteString(w, fmt.Sprintf("%+v\n", newRepo))
+	err = SaveRepo(K8sClient, newRepo)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	} else {
+		io.WriteString(w, fmt.Sprintf("%+v\n", newRepo))
+	}
 
 }
 
 func main() {
-	client := NewHelmClient(os.Getenv("TILLER_HOST"))
+	helmClient := NewHelmClient(os.Getenv("TILLER_HOST"))
+	var err error
+	K8sClient, err = k8s.NewInClusterClient()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := mux.NewRouter()
-	r.HandleFunc("/", client.listReleases)
+	r.HandleFunc("/", helmClient.listReleases)
 	r.HandleFunc("/repo/add", AddHelmRepoHandler).Methods("POST")
 	http.Handle("/", r)
 
