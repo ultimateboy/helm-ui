@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
-	"github.com/ericchiang/k8s"
 	"github.com/ericchiang/k8s/api/v1"
 	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
 )
@@ -15,9 +13,9 @@ type HelmRepo struct {
 	URL  string `json:"url"`
 }
 
-func GetHelmRepos(client *k8s.Client) ([]HelmRepo, error) {
+func (s *ServerContext) GetHelmRepos() ([]HelmRepo, error) {
 	var repos []HelmRepo
-	configMap, err := client.CoreV1().GetConfigMap(context.Background(), HELMUIConfigMap, "default")
+	configMap, err := s.k8sClient.CoreV1().GetConfigMap(s.ctx, s.configMapName, "default")
 	if err != nil {
 		return repos, err
 	}
@@ -33,26 +31,25 @@ func GetHelmRepos(client *k8s.Client) ([]HelmRepo, error) {
 	return repos, nil
 }
 
-func SaveHelmRepo(client *k8s.Client, r HelmRepo) error {
+func (s *ServerContext) SaveHelmRepo(r HelmRepo) error {
 	// need to deal with the namespacing at some point
 	namespace := "default"
-	ctx := context.Background()
 	// try to get teh config map and create it if it does not
-	configMap, err := client.CoreV1().GetConfigMap(ctx, HELMUIConfigMap, namespace)
+	configMap, err := s.k8sClient.CoreV1().GetConfigMap(s.ctx, s.configMapName, namespace)
 	if err != nil {
 
-		if !strings.Contains(err.Error(), fmt.Sprintf(`configmaps "%s" not found`, HELMUIConfigMap)) {
+		if !strings.Contains(err.Error(), fmt.Sprintf(`configmaps "%s" not found`, s.configMapName)) {
 			return err
 		}
 
 		cfgmap := &v1.ConfigMap{
 			Metadata: &metav1.ObjectMeta{
-				Name:      &HELMUIConfigMap,
+				Name:      &s.configMapName,
 				Namespace: &namespace,
 			},
 		}
 
-		configMap, err = client.CoreV1().CreateConfigMap(ctx, cfgmap)
+		configMap, err = s.k8sClient.CoreV1().CreateConfigMap(s.ctx, cfgmap)
 		if err != nil {
 			return err
 		}
@@ -70,7 +67,7 @@ func SaveHelmRepo(client *k8s.Client, r HelmRepo) error {
 	// now save the new repo url
 	configMap.Data[r.Name] = r.URL
 
-	_, err = client.CoreV1().UpdateConfigMap(ctx, configMap)
+	_, err = s.k8sClient.CoreV1().UpdateConfigMap(s.ctx, configMap)
 	if err != nil {
 		return err
 	}
