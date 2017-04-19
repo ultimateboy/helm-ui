@@ -49,7 +49,25 @@ type HelmRepo struct {
 	URL  string
 }
 
-func SaveRepo(client *k8s.Client, r HelmRepo) error {
+func GetHelmRepos(client *k8s.Client) ([]HelmRepo, error) {
+	var repos []HelmRepo
+	configMap, err := client.CoreV1().GetConfigMap(context.Background(), HELMUIConfigMap, "default")
+	if err != nil {
+		return repos, err
+	}
+
+	for k, v := range configMap.Data {
+		repo := HelmRepo{
+			Name: k,
+			URL:  v,
+		}
+		repos = append(repos, repo)
+	}
+
+	return repos, nil
+}
+
+func SaveHelmRepo(client *k8s.Client, r HelmRepo) error {
 	// need to deal with the namespacing at some point
 	namespace := "default"
 	ctx := context.Background()
@@ -103,11 +121,35 @@ func AddHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	err = SaveRepo(K8sClient, newRepo)
+	err = SaveHelmRepo(K8sClient, newRepo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
-		io.WriteString(w, fmt.Sprintf("%+v\n", newRepo))
+		payload, err := json.MarshalIndent(newRepo, "", "  ")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		io.WriteString(w, string(payload))
+	}
+
+}
+
+func HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+
+	switch r.Method {
+	case "POST":
+		AddHelmRepoHandler(w, r)
+		return
+	default:
+		repos, err := GetHelmRepos(K8sClient)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		payload, err := json.MarshalIndent(repos, "", "  ")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		io.WriteString(w, string(payload))
 	}
 
 }
@@ -122,7 +164,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", helmClient.listReleases)
-	r.HandleFunc("/repo/add", AddHelmRepoHandler).Methods("POST")
+	r.HandleFunc("/repo", HelmRepoHandler).Methods("POST", "GET")
 	http.Handle("/", r)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil)
