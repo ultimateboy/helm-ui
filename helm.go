@@ -11,8 +11,9 @@ import (
 )
 
 type HelmRepo struct {
-	Name string `json:"name"`
-	URL  string `json:"url"`
+	Name  string `json:"name"`
+	URL   string `json:"url"`
+	Cache string `json:"cache"`
 }
 
 func GetHelmRepos(client *k8s.Client) ([]HelmRepo, error) {

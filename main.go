@@ -20,10 +20,12 @@ const (
 )
 
 func main() {
-	GetSynced()
+
 	serverContext := NewServerContext(os.Getenv("TILLER_HOST"))
 	serverContext.tmpls = map[string]*template.Template{}
 	serverContext.tmpls["home.html"] = template.Must(template.ParseFiles(templateDir+"home.html", defaultLayout))
+
+	GetSynced(serverContext.k8sClient)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", serverContext.HomeHandler)

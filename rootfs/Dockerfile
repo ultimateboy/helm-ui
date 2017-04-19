@@ -12,7 +12,8 @@ COPY . /
 
 # Fix some permission since we'll be running as a non-root user
 RUN chown -R helm-ui:helm-ui /opt/helm-ui \
-    && chmod +x /opt/helm-ui/sbin/*
+    && chmod +x /opt/helm-ui/sbin/* \
+	&& chown -R helm-ui /var/www
 
 USER helm-ui
 WORKDIR /opt/helm-ui/sbin/
