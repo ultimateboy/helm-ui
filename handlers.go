@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"html/template"
 	"log"
@@ -11,23 +12,29 @@ import (
 )
 
 type ServerContext struct {
-	helmClient *helm.Client
-	k8sClient  *k8s.Client
-	tmpls      map[string]*template.Template
+	helmClient    *helm.Client
+	k8sClient     *k8s.Client
+	tmpls         map[string]*template.Template
+	ctx           context.Context
+	namespace     string
+	configMapName string
 }
 
-func NewServerContext(host string) *ServerContext {
+func NewServerContext(ctx context.Context, host string, namespace string, configMapName string) *ServerContext {
 	k8sClient, err := k8s.NewInClusterClient()
 	if err != nil {
 		log.Fatal(err)
 	}
 	return &ServerContext{
-		helmClient: helm.NewClient(helm.Host(host)),
-		k8sClient:  k8sClient,
+		helmClient:    helm.NewClient(helm.Host(host)),
+		k8sClient:     k8sClient,
+		ctx:           ctx,
+		namespace:     namespace,
+		configMapName: configMapName,
 	}
 }
 
-func (c ServerContext) listReleases(w http.ResponseWriter, r *http.Request) {
+func (c ServerContext) ListReleases(w http.ResponseWriter, r *http.Request) {
 	releases, err := c.helmClient.ListReleases()
 	if err != nil {
 		log.Printf("failed to list releases: %v", err)
@@ -48,7 +55,7 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
-	err = SaveHelmRepo(c.k8sClient, newRepo)
+	err = c.SaveHelmRepo(newRepo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
@@ -61,13 +68,12 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 	case "POST":
 		c.AddHelmRepoHandler(w, r)
 		return
 	default:
-		repos, err := GetHelmRepos(c.k8sClient)
+		repos, err := c.GetHelmRepos()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
