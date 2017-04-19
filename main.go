@@ -125,11 +125,10 @@ func AddHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
-		payload, err := json.MarshalIndent(newRepo, "", "  ")
+		err = json.NewEncoder(w).Encode(newRepo)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		io.WriteString(w, string(payload))
 	}
 
 }
@@ -145,11 +144,10 @@ func HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		payload, err := json.MarshalIndent(repos, "", "  ")
+		err = json.NewEncoder(w).Encode(repos)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		io.WriteString(w, string(payload))
 	}
 
 }
