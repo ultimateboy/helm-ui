@@ -2,30 +2,32 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"html/template"
 	"net/http"
 	"os"
 
-	"github.com/ericchiang/k8s"
 	"github.com/gorilla/mux"
 )
 
 var (
-	K8sClient       *k8s.Client
 	HELMUIConfigMap = "helmui"
 )
 
+const (
+	templateDir   = "/var/www/templates/"
+	defaultLayout = "/var/www/templates/layout.html"
+	repoFile      = "/var/www/repositories.yaml"
+)
+
 func main() {
-	helmClient := NewHelmClient(os.Getenv("TILLER_HOST"))
-	var err error
-	K8sClient, err = k8s.NewInClusterClient()
-	if err != nil {
-		log.Fatal(err)
-	}
+	serverContext := NewServerContext(os.Getenv("TILLER_HOST"))
+	serverContext.tmpls = map[string]*template.Template{}
+	serverContext.tmpls["home.html"] = template.Must(template.ParseFiles(templateDir+"home.html", defaultLayout))
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", helmClient.listReleases)
-	r.HandleFunc("/repo", HelmRepoHandler).Methods("POST", "GET")
+	r.HandleFunc("/", serverContext.HomeHandler)
+	r.HandleFunc("/releases", serverContext.listReleases)
+	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET")
 	http.Handle("/", r)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil)

@@ -1,5 +1,5 @@
-hash: 72fe8d81ba5e9214188e9af0fb00f6c97d5860aa284920a7cb87d30d26513195
-updated: 2017-04-18T16:25:05.790707141-06:00
+hash: e3dcf7a6e53f0bcee5fcb1b84920c14b4cfa1d54af3c03282e9485789b9f71ed
+updated: 2017-04-19T16:00:33.744366226-06:00
 imports:
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
@@ -69,6 +69,17 @@ imports:
   version: 751171607256bb66e64c9f0220c00662420c38e9
   subpackages:
   - ast
+- name: golang.org/x/crypto
+  version: 1f22c0103821b9390939b6776727195525381532
+  subpackages:
+  - openpgp/clearsign
+  - openpgp
+  - openpgp/packet
+  - openpgp/armor
+  - openpgp/errors
+  - openpgp/s2k
+  - cast5
+  - openpgp/elgamal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
@@ -95,11 +106,16 @@ imports:
   version: 32562a3040bb5ca690339b9840b6f60f8ce25da4
   subpackages:
   - pkg/helm
+  - pkg/helm/helmpath
+  - pkg/repo
   - pkg/chartutil
   - pkg/proto/hapi/chart
   - pkg/proto/hapi/release
   - pkg/proto/hapi/services
   - pkg/version
+  - pkg/provenance
+  - pkg/tlsutil
+  - pkg/urlutil
   - pkg/ignore
   - pkg/proto/hapi/version
 - name: k8s.io/kubernetes

@@ -3,37 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
 	"strings"
 
 	"github.com/ericchiang/k8s"
 	"github.com/ericchiang/k8s/api/v1"
 	metav1 "github.com/ericchiang/k8s/apis/meta/v1"
-	"k8s.io/helm/pkg/helm"
 )
-
-type HelmClient struct {
-	c *helm.Client
-}
-
-func NewHelmClient(host string) *HelmClient {
-	return &HelmClient{
-		c: helm.NewClient(helm.Host(host)),
-	}
-}
-
-func (c HelmClient) listReleases(w http.ResponseWriter, r *http.Request) {
-	releases, err := c.c.ListReleases()
-	if err != nil {
-		log.Printf("failed to list releases: %v", err)
-		return
-	}
-	for _, r := range releases.GetReleases() {
-		io.WriteString(w, r.Name)
-	}
-}
 
 type HelmRepo struct {
 	Name string `json:"name"`
