@@ -45,8 +45,8 @@ func (c HelmClient) listReleases(w http.ResponseWriter, r *http.Request) {
 }
 
 type HelmRepo struct {
-	Name string
-	URL  string
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 func GetHelmRepos(client *k8s.Client) ([]HelmRepo, error) {
