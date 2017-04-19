@@ -2,38 +2,33 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"log"
+	"html/template"
 	"net/http"
 	"os"
 
-	"k8s.io/helm/pkg/helm"
+	"github.com/gorilla/mux"
 )
 
-type HelmClient struct {
-	c *helm.Client
-}
+var (
+	HELMUIConfigMap = "helmui"
+)
 
-func NewHelmClient(host string) *HelmClient {
-	return &HelmClient{
-		c: helm.NewClient(helm.Host(host)),
-	}
-}
-
-func (c HelmClient) listReleases(w http.ResponseWriter, r *http.Request) {
-	releases, err := c.c.ListReleases()
-	if err != nil {
-		log.Printf("failed to list releases: %v", err)
-		return
-	}
-	for _, r := range releases.GetReleases() {
-		io.WriteString(w, r.Name)
-	}
-}
+const (
+	templateDir   = "/var/www/templates/"
+	defaultLayout = "/var/www/templates/layout.html"
+	repoFile      = "/var/www/repositories.yaml"
+)
 
 func main() {
-	client := NewHelmClient(os.Getenv("TILLER_HOST"))
-	http.HandleFunc("/", client.listReleases)
+	serverContext := NewServerContext(os.Getenv("TILLER_HOST"))
+	serverContext.tmpls = map[string]*template.Template{}
+	serverContext.tmpls["home.html"] = template.Must(template.ParseFiles(templateDir+"home.html", defaultLayout))
+
+	r := mux.NewRouter()
+	r.HandleFunc("/", serverContext.HomeHandler)
+	r.HandleFunc("/releases", serverContext.listReleases)
+	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET")
+	http.Handle("/", r)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), nil)
 }
