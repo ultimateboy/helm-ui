@@ -5,11 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ericchiang/k8s"
 	"k8s.io/helm/pkg/repo"
 )
 
-func GetSynced(client *k8s.Client) {
+func GetSynced(ctx *ServerContext) {
 	changed := false
 
 	f, err := repo.LoadRepositoriesFile(repoFile)
@@ -21,8 +20,11 @@ func GetSynced(client *k8s.Client) {
 		changed = true
 	}
 
-	stored, err := GetHelmRepos(client)
+	stored, err := ctx.GetHelmRepos()
 	if err != nil {
+		if strings.Contains(err.Error(), `configmaps "helmui" not found`) {
+			return
+		}
 		log.Fatalln(err)
 	}
 
