@@ -5,16 +5,19 @@ import (
 	"os"
 	"strings"
 
+	"k8s.io/helm/pkg/helm/helmpath"
 	"k8s.io/helm/pkg/repo"
 )
 
 func GetSynced(ctx *ServerContext) {
 	changed := false
 
-	f, err := repo.LoadRepositoriesFile(repoFile)
+	home := helmpath.Home(homeDir)
+
+	f, err := repo.LoadRepositoriesFile(home.RepositoryFile())
 	if err != nil {
 		if !strings.Contains(err.Error(), "no such file or directory") {
-			log.Fatalln(err)
+			log.Println(err)
 		}
 		f = repo.NewRepoFile()
 		changed = true
@@ -22,10 +25,7 @@ func GetSynced(ctx *ServerContext) {
 
 	stored, err := ctx.GetHelmRepos()
 	if err != nil {
-		if strings.Contains(err.Error(), `configmaps "helmui" not found`) {
-			return
-		}
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	// remove any repositories that are not in the configmap
@@ -46,17 +46,27 @@ func GetSynced(ctx *ServerContext) {
 	// add new repos to the repositories file
 	for _, r := range stored {
 		if !f.Has(r.Name) {
-			f.Add(&repo.Entry{
+			cacheIndex := home.CacheIndex(r.Name)
+			newRepo := &repo.Entry{
 				Name:  r.Name,
 				URL:   r.URL,
-				Cache: r.Cache,
-			})
+				Cache: cacheIndex,
+			}
+			chartRepo, err := repo.NewChartRepository(newRepo)
+			if err != nil {
+				log.Println(err)
+			}
+			if err := chartRepo.DownloadIndexFile(home.Cache()); err != nil {
+				log.Printf("Looks like %q is not a valid chart repository or cannot be reached: %s", r.URL, err.Error())
+			}
+
+			f.Update(newRepo)
 			changed = true
 		}
 	}
 
 	if changed {
-		err = f.WriteFile(repoFile, os.FileMode(0644))
+		err = f.WriteFile(home.RepositoryFile(), os.FileMode(0644))
 		if err != nil {
 			log.Fatalln(err)
 		}

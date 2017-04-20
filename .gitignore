@@ -1,3 +1,4 @@
 vendor/
 rootfs/opt/helm-ui
+!rootfs/opt/helm-ui/templates
 .DS_Store

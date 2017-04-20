@@ -7,15 +7,24 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
+	"time"
 
 	"github.com/gorilla/mux"
 )
 
 const (
-	templateDir   = "/var/www/templates/"
-	defaultLayout = "/var/www/templates/layout.html"
-	repoFile      = "/var/www/repositories.yaml"
+	templateDir   = "/opt/helm-ui/templates"
+	defaultLayout = "/opt/helm-ui/templates/layout.html"
+	homeDir       = "/opt/helm-ui"
 )
+
+func syncChartRepos(serverContext *ServerContext) {
+	for {
+		GetSynced(serverContext)
+		time.Sleep(time.Millisecond * 100)
+	}
+}
 
 func main() {
 
@@ -27,9 +36,10 @@ func main() {
 	serverContext := NewServerContext(ctx, os.Getenv("TILLER_HOST"), "default", "helmui")
 
 	serverContext.tmpls = map[string]*template.Template{}
-	serverContext.tmpls["home.html"] = template.Must(template.ParseFiles(templateDir+"home.html", defaultLayout))
+	serverContext.tmpls["home.html"] = template.Must(template.ParseFiles(path.Join(templateDir, "home.html"), defaultLayout))
 
-	GetSynced(serverContext)
+	// continually reconcile the local repo cache with configmap repo list
+	go syncChartRepos(serverContext)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", serverContext.HomeHandler)
