@@ -39,6 +39,12 @@ func GetSynced(ctx *ServerContext) {
 
 		if !found {
 			f.Remove(r.Name)
+			if _, err := os.Stat(home.CacheIndex(r.Name)); err == nil {
+				err = os.Remove(home.CacheIndex(r.Name))
+				if err != nil {
+					log.Println(err)
+				}
+			}
 			changed = true
 		}
 	}
