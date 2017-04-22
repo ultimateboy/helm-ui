@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/ericchiang/k8s"
 	"github.com/gorilla/mux"
+	"k8s.io/helm/pkg/downloader"
 	"k8s.io/helm/pkg/helm"
 	"k8s.io/helm/pkg/helm/helmpath"
 	"k8s.io/helm/pkg/repo"
@@ -103,6 +105,35 @@ func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Requ
 		cvs = append(cvs, chartVersions[0])
 	}
 	jsonData, err := json.Marshal(cvs)
+	if err != nil {
+		log.Printf("failed to json marshal: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	_, err = w.Write(jsonData)
+	if err != nil {
+		log.Printf("failed to write: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (c ServerContext) HelmRepoChartInstallHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	home := helmpath.Home(homeDir)
+
+	chartDownloader := downloader.ChartDownloader{
+		HelmHome: home,
+	}
+	tarDest, _, err := chartDownloader.DownloadTo(fmt.Sprintf("%s/%s", vars["repo"], vars["chart"]), "", "")
+	if err != nil {
+		log.Printf("failed to resolve chart version: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	resp, err := c.helmClient.InstallRelease(tarDest, c.namespace, helm.ValueOverrides([]byte("")))
+	if err != nil {
+		log.Printf("failed to install release: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	jsonData, err := json.Marshal(resp.Release)
 	if err != nil {
 		log.Printf("failed to json marshal: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -46,6 +46,8 @@ func main() {
 	r.HandleFunc("/releases", serverContext.ListReleases)
 	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET")
 	r.HandleFunc("/repos/{repo}/charts", serverContext.HelmRepoChartsHandler).Methods("GET")
+	r.HandleFunc("/repos/{repo}/charts/{chart}/install", serverContext.HelmRepoChartInstallHandler).Methods("POST")
+
 	http.Handle("/", r)
 
 	port := os.Getenv("PORT")
