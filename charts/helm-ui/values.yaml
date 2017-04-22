@@ -1,7 +1,10 @@
+basedomain: example.com
+
 api:
   name: api
-  port: 8079
-  expose: true
+  port: 8080
+  serviceType: NodePort
+  domain: api
 
   tiller:
     host: tiller-deploy.kube-system.svc.cluster.local:44134
@@ -18,7 +21,9 @@ api:
 frontend:
   name: frontend
   port: 3000
-  serviceType: LoadBalancer
+  serviceType: NodePort
+  domain: frontend
+  
   image:
     registry: docker.io
     org: ultimateboy

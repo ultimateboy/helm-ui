@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "fullname" . }}-api
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -13,12 +13,6 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: {{ .Values.frontend.port }}
-    name: frontend
-{{ if .Values.api.expose }}
-  - protocol: TCP
-    port: 8080
     targetPort: {{ .Values.api.port }}
     name: api
-{{ end }}
-  type: {{ .Values.frontend.serviceType }}
+  type: {{ .Values.api.serviceType }}

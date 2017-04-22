@@ -20,6 +20,10 @@ spec:
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
     spec:
+      volumes:
+        - name: api-config
+          configMap:
+            name: {{ .Release.Name }}-config
       containers:
       - name: {{ .Values.api.name }}
         image: {{ .Values.api.image.registry }}/{{ .Values.api.image.org }}/{{ .Values.api.image.name }}:{{ .Values.api.image.tag }}
@@ -41,6 +45,6 @@ spec:
         - "start"
         ports:
         - containerPort: {{ .Values.frontend.port }}
-        env:
-        - name: API_URL
-          value: "http://localhost:{{ .Values.api.port }}"
+        volumeMounts:
+        - name: api-config
+          mountPath: /usr/src/app/src/app/config
