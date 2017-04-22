@@ -135,7 +135,7 @@ func (c ServerContext) GetHelmRepoHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		err = json.NewEncoder(w).Encode(repos)
 		if err != nil {
@@ -150,6 +150,7 @@ func (c ServerContext) GetHelmRepoHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	switch r.Method {
 	case "POST":
 		c.AddHelmRepoHandler(w, r)
