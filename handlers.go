@@ -3,12 +3,17 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/ericchiang/k8s"
+	"github.com/gorilla/mux"
+	"k8s.io/helm/pkg/downloader"
 	"k8s.io/helm/pkg/helm"
+	"k8s.io/helm/pkg/helm/helmpath"
+	"k8s.io/helm/pkg/repo"
 )
 
 type ServerContext struct {
@@ -34,17 +39,54 @@ func NewServerContext(ctx context.Context, host string, namespace string, config
 	}
 }
 
-func (c ServerContext) ListReleases(w http.ResponseWriter, r *http.Request) {
-	releases, err := c.helmClient.ListReleases()
-	if err != nil {
-		log.Printf("failed to list releases: %v", err)
-		return
-	}
+func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	err = json.NewEncoder(w).Encode(releases.GetReleases())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	switch r.Method {
+	case "DELETE":
+		release, ok := vars["release"]
+		if !ok {
+			http.Error(w, "must specify release", http.StatusInternalServerError)
+			return
+		}
+		_, err := c.helmClient.DeleteRelease(release)
+		if err != nil {
+			log.Printf("failed to delete release: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
+		if err != nil {
+			log.Printf("failed to write json: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	case "GET":
+		_, ok := vars["release"]
+		if ok {
+			// get a single release
+			resp, err := c.helmClient.ReleaseContent(vars["release"])
+			if err != nil {
+				log.Printf("failed to get release: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+
+			}
+			err = json.NewEncoder(w).Encode(resp.Release)
+			if err != nil {
+				log.Printf("failed to write json: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
+		// get all releases
+		releases, err := c.helmClient.ListReleases()
+		if err != nil {
+			log.Printf("failed to list releases: %v", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(releases.GetReleases())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -67,31 +109,108 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
-
 }
 
-func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	switch r.Method {
-	case "POST":
-		c.AddHelmRepoHandler(w, r)
+func (c ServerContext) DeleteHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	repo, ok := vars["repo"]
+	if !ok {
+		http.Error(w, "must specify a repository", http.StatusBadRequest)
 		return
-	case "OPTIONS":
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	default:
+	}
+	err := c.DeleteHelmRepo(HelmRepo{Name: repo})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}
+
+func (c ServerContext) GetHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	_, ok := vars["repo"]
+	if !ok {
+		// list all repos
 		repos, err := c.GetHelmRepos()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		err = json.NewEncoder(w).Encode(repos)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+	} else {
+		// list a single repo
+		http.Error(w, "not implemented", http.StatusInternalServerError)
+		return
 	}
+}
 
+func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		c.AddHelmRepoHandler(w, r)
+		return
+	case "DELETE":
+		c.DeleteHelmRepoHandler(w, r)
+		return
+	case "GET":
+		c.GetHelmRepoHandler(w, r)
+		return
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+}
+
+func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	home := helmpath.Home(homeDir)
+
+	cacheIndex, err := repo.LoadIndexFile(home.CacheIndex(vars["repo"]))
+	if err != nil {
+		log.Printf("failed to load cache index: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	cacheIndex.SortEntries()
+
+	var cvs []*repo.ChartVersion
+	for _, chartVersions := range cacheIndex.Entries {
+		// for now we only care about the first version (the latest)
+		cvs = append(cvs, chartVersions[0])
+	}
+	err = json.NewEncoder(w).Encode(cvs)
+	if err != nil {
+		log.Printf("failed to write: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (c ServerContext) HelmRepoChartInstallHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	home := helmpath.Home(homeDir)
+
+	chartDownloader := downloader.ChartDownloader{
+		HelmHome: home,
+	}
+	tarDest, _, err := chartDownloader.DownloadTo(fmt.Sprintf("%s/%s", vars["repo"], vars["chart"]), "", "")
+	if err != nil {
+		log.Printf("failed to resolve chart version: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	resp, err := c.helmClient.InstallRelease(tarDest, c.namespace, helm.ValueOverrides([]byte("")))
+	if err != nil {
+		log.Printf("failed to install release: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	err = json.NewEncoder(w).Encode(resp.Release)
+	if err != nil {
+		log.Printf("failed to write: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func (c ServerContext) HomeHandler(w http.ResponseWriter, r *http.Request) {

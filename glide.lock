@@ -1,14 +1,14 @@
-hash: e3dcf7a6e53f0bcee5fcb1b84920c14b4cfa1d54af3c03282e9485789b9f71ed
-updated: 2017-04-19T16:00:33.744366226-06:00
+hash: 989d33256cfda3a1e658c42a586d7b202e8dcf36c0321eefb1fa5eb36fa6d23f
+updated: 2017-04-22T12:31:55.439152912-06:00
 imports:
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/ericchiang/k8s
   version: bd3351b0ceb817083a3226c152e3a2c9bb2849c9
   subpackages:
-  - api/v1
-  - apis/meta/v1
+  - api/resource
   - api/unversioned
+  - api/v1
   - apis/apps/v1alpha1
   - apis/apps/v1beta1
   - apis/authentication/v1
@@ -23,6 +23,7 @@ imports:
   - apis/certificates/v1beta1
   - apis/extensions/v1beta1
   - apis/imagepolicy/v1alpha1
+  - apis/meta/v1
   - apis/policy/v1alpha1
   - apis/policy/v1beta1
   - apis/rbac/v1alpha1
@@ -31,10 +32,9 @@ imports:
   - apis/storage/v1
   - apis/storage/v1beta1
   - runtime
-  - watch/versioned
-  - api/resource
   - runtime/schema
   - util/intstr
+  - watch/versioned
 - name: github.com/facebookgo/symwalk
   version: 42004b9f322246749dd73ad71008b1f3160c0052
 - name: github.com/ghodss/yaml
@@ -43,11 +43,11 @@ imports:
   version: bea32b9cd2d6f55753d94a28e959b13f0244797a
   subpackages:
   - compiler
-  - syntax
   - match
+  - syntax
   - syntax/ast
-  - util/runes
   - syntax/lexer
+  - util/runes
   - util/strings
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
@@ -72,52 +72,54 @@ imports:
 - name: golang.org/x/crypto
   version: 1f22c0103821b9390939b6776727195525381532
   subpackages:
-  - openpgp/clearsign
-  - openpgp
-  - openpgp/packet
-  - openpgp/armor
-  - openpgp/errors
-  - openpgp/s2k
   - cast5
+  - openpgp
+  - openpgp/armor
+  - openpgp/clearsign
   - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
-  - http2
   - context
+  - http2
   - http2/hpack
+  - internal/timeseries
   - lex/httplex
   - trace
-  - internal/timeseries
 - name: google.golang.org/grpc
   version: b7f1379d3cbbbeb2ca3405852012e237aa05459e
   subpackages:
-  - credentials
-  - metadata
   - codes
+  - credentials
   - grpclog
   - internal
+  - metadata
   - naming
-  - transport
   - peer
+  - transport
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/helm
   version: 32562a3040bb5ca690339b9840b6f60f8ce25da4
   subpackages:
+  - pkg/chartutil
+  - pkg/downloader
   - pkg/helm
   - pkg/helm/helmpath
-  - pkg/repo
-  - pkg/chartutil
+  - pkg/ignore
   - pkg/proto/hapi/chart
   - pkg/proto/hapi/release
   - pkg/proto/hapi/services
-  - pkg/version
+  - pkg/proto/hapi/version
   - pkg/provenance
+  - pkg/repo
+  - pkg/resolver
   - pkg/tlsutil
   - pkg/urlutil
-  - pkg/ignore
-  - pkg/proto/hapi/version
+  - pkg/version
 - name: k8s.io/kubernetes
   version: ea8f6637b639246faa14a8d5c6f864100fcb77a9
   subpackages:

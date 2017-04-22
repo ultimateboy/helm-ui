@@ -27,7 +27,6 @@ func syncChartRepos(serverContext *ServerContext) {
 }
 
 func main() {
-
 	log.Printf("Starting Helm UI version %s...\n", os.Getenv("VERSION"))
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -44,8 +43,12 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", serverContext.HomeHandler)
-	r.HandleFunc("/releases", serverContext.ListReleases)
+	r.HandleFunc("/releases", serverContext.ReleaseHandler).Methods("GET")
+	r.HandleFunc("/releases/{release}", serverContext.ReleaseHandler).Methods("GET", "DELETE")
 	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET", "OPTIONS")
+	r.HandleFunc("/repos/{repo}", serverContext.HelmRepoHandler).Methods("DELETE")
+	r.HandleFunc("/repos/{repo}/charts", serverContext.HelmRepoChartsHandler).Methods("GET")
+	r.HandleFunc("/repos/{repo}/charts/{chart}/install", serverContext.HelmRepoChartInstallHandler).Methods("POST")
 
 	http.Handle("/", r)
 
