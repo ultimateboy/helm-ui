@@ -42,9 +42,11 @@ func main() {
 	go syncChartRepos(serverContext)
 
 	r := mux.NewRouter()
+
 	r.HandleFunc("/", serverContext.HomeHandler)
 	r.HandleFunc("/releases", serverContext.ListReleases)
-	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET")
+	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET", "OPTIONS")
+
 	http.Handle("/", r)
 
 	port := os.Getenv("PORT")
