@@ -1,16 +1,29 @@
-app:
-  name: helm-ui
-  port: 8080
+api:
+  name: api
+  port: 8079
+  expose: true
+
+  tiller:
+    host: tiller-deploy.kube-system.svc.cluster.local:44134
+
+  image:
+    registry: docker.io
+    org: ultimateboy
+    name: helm-ui
+    tag: canary
+
+    # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
+    pullPolicy: Always
+
+frontend:
+  name: frontend
+  port: 3000
   serviceType: LoadBalancer
+  image:
+    registry: docker.io
+    org: ultimateboy
+    name: helm-ui-frontend
+    tag: canary
 
-tiller:
-  host: tiller-deploy.kube-system.svc.cluster.local:44134
-
-image:
-  registry: docker.io
-  org: ultimateboy
-  name: helm-ui
-  tag: canary
-
-  # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
-  pullPolicy: Always
+    # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
+    pullPolicy: Always

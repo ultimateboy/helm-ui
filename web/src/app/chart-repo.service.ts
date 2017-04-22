@@ -7,7 +7,7 @@ import { ChartRepo } from './chart-repo';
 
 @Injectable()
 export class ChartRepoService {
-  private reposUrl = 'http://104.197.249.14/repos';  // URL to web api
+  private reposUrl = process.env.API_URL + '/repos';
 
   constructor(private http: Http) { }
 

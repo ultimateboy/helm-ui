@@ -13,5 +13,12 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: {{ .Values.app.port }}
-  type: {{ .Values.app.serviceType }}
+    targetPort: {{ .Values.frontend.port }}
+    name: frontend
+{{ if .Values.api.expose }}
+  - protocol: TCP
+    port: 8080
+    targetPort: {{ .Values.api.port }}
+    name: api
+{{ end }}
+  type: {{ .Values.frontend.serviceType }}

@@ -27,7 +27,6 @@ func syncChartRepos(serverContext *ServerContext) {
 }
 
 func main() {
-
 	log.Printf("Starting Helm UI version %s...\n", os.Getenv("VERSION"))
 
 	ctx, cancel := context.WithCancel(context.Background())

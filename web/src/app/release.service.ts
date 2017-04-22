@@ -7,7 +7,7 @@ import { Release } from './release';
 
 @Injectable()
 export class ReleaseService {
-  private reposUrl = 'http://104.197.249.14/releases';  // URL to web api
+  private reposUrl = process.env.API_URL + '/releases';
 
   constructor(private http: Http) { }
 
