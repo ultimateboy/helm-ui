@@ -175,12 +175,7 @@ func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Requ
 		// for now we only care about the first version (the latest)
 		cvs = append(cvs, chartVersions[0])
 	}
-	jsonData, err := json.Marshal(cvs)
-	if err != nil {
-		log.Printf("failed to json marshal: %s", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	_, err = w.Write(jsonData)
+	err = json.NewEncoder(w).Encode(cvs)
 	if err != nil {
 		log.Printf("failed to write: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -204,12 +199,7 @@ func (c ServerContext) HelmRepoChartInstallHandler(w http.ResponseWriter, r *htt
 		log.Printf("failed to install release: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	jsonData, err := json.Marshal(resp.Release)
-	if err != nil {
-		log.Printf("failed to json marshal: %s", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	_, err = w.Write(jsonData)
+	err = json.NewEncoder(w).Encode(resp.Release)
 	if err != nil {
 		log.Printf("failed to write: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
