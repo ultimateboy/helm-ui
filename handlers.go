@@ -8,7 +8,10 @@ import (
 	"net/http"
 
 	"github.com/ericchiang/k8s"
+	"github.com/gorilla/mux"
 	"k8s.io/helm/pkg/helm"
+	"k8s.io/helm/pkg/helm/helmpath"
+	"k8s.io/helm/pkg/repo"
 )
 
 type ServerContext struct {
@@ -64,7 +67,6 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
-
 }
 
 func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +84,34 @@ func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+}
 
+func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	home := helmpath.Home(homeDir)
+
+	cacheIndex, err := repo.LoadIndexFile(home.CacheIndex(vars["repo"]))
+	if err != nil {
+		log.Printf("failed to load cache index: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	cacheIndex.SortEntries()
+
+	var cvs []*repo.ChartVersion
+	for _, chartVersions := range cacheIndex.Entries {
+		// for now we only care about the first version (the latest)
+		cvs = append(cvs, chartVersions[0])
+	}
+	jsonData, err := json.Marshal(cvs)
+	if err != nil {
+		log.Printf("failed to json marshal: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	_, err = w.Write(jsonData)
+	if err != nil {
+		log.Printf("failed to write: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func (c ServerContext) HomeHandler(w http.ResponseWriter, r *http.Request) {
