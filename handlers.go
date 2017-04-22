@@ -39,15 +39,53 @@ func NewServerContext(ctx context.Context, host string, namespace string, config
 	}
 }
 
-func (c ServerContext) ListReleases(w http.ResponseWriter, r *http.Request) {
-	releases, err := c.helmClient.ListReleases()
-	if err != nil {
-		log.Printf("failed to list releases: %v", err)
-		return
-	}
-	err = json.NewEncoder(w).Encode(releases.GetReleases())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	switch r.Method {
+	case "DELETE":
+		release, ok := vars["release"]
+		if !ok {
+			http.Error(w, "must specify release", http.StatusInternalServerError)
+			return
+		}
+		_, err := c.helmClient.DeleteRelease(release)
+		if err != nil {
+			log.Printf("failed to delete release: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
+		if err != nil {
+			log.Printf("failed to write json: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	case "GET":
+		_, ok := vars["release"]
+		if ok {
+			// get a single release
+			resp, err := c.helmClient.ReleaseContent(vars["release"])
+			if err != nil {
+				log.Printf("failed to get release: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+
+			}
+			err = json.NewEncoder(w).Encode(resp.Release)
+			if err != nil {
+				log.Printf("failed to write json: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
+		// get all releases
+		releases, err := c.helmClient.ListReleases()
+		if err != nil {
+			log.Printf("failed to list releases: %v", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		err = json.NewEncoder(w).Encode(releases.GetReleases())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -71,20 +109,53 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
+func (c ServerContext) DeleteHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	repo, ok := vars["repo"]
+	if !ok {
+		http.Error(w, "must specify a repository", http.StatusBadRequest)
+		return
+	}
+	err := c.DeleteHelmRepo(HelmRepo{Name: repo})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}
+
+func (c ServerContext) GetHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	_, ok := vars["repo"]
+	if !ok {
+		// list all repos
+		repos, err := c.GetHelmRepos()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		err = json.NewEncoder(w).Encode(repos)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// list a single repo
+		http.Error(w, "not implemented", http.StatusInternalServerError)
+		return
+	}
+}
+
 func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		c.AddHelmRepoHandler(w, r)
 		return
-	default:
-		repos, err := c.GetHelmRepos()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-		err = json.NewEncoder(w).Encode(repos)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
+	case "DELETE":
+		c.DeleteHelmRepoHandler(w, r)
+		return
+	case "GET":
+		c.GetHelmRepoHandler(w, r)
+		return
 	}
 }
 
