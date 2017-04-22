@@ -1,0 +1,12 @@
+<h2>Releases</h2>
+
+<ul class="heroes">
+  <li *ngFor="let release of releases" (click)="onSelect(release)"
+      [class.selected]="release === selectedRelease">
+    <span class="badge">{{release.namespace}}</span>
+    <span>{{release.name}}</span>
+    <button class="delete"
+      (click)="delete(release); $event.stopPropagation()">x</button>
+  </li>
+</ul>
+

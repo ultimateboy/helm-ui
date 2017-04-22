@@ -41,7 +41,8 @@ func NewServerContext(ctx context.Context, host string, namespace string, config
 
 func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	switch r.Method {
 	case "DELETE":
 		release, ok := vars["release"]
@@ -98,6 +99,7 @@ func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
+	w.Header().Set("Content-Type", "application/json")
 	err = c.SaveHelmRepo(newRepo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -133,6 +135,8 @@ func (c ServerContext) GetHelmRepoHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		w.Header().Set("Content-Type", "application/json")
 		err = json.NewEncoder(w).Encode(repos)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -156,6 +160,9 @@ func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		c.GetHelmRepoHandler(w, r)
 		return
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 }
 
