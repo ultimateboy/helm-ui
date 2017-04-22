@@ -4,6 +4,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { ChartRepo } from './chart-repo';
+import { Chart } from './chart'
 
 @Injectable()
 export class ChartRepoService {
@@ -17,6 +18,14 @@ export class ChartRepoService {
                .then(response => response.json() as ChartRepo[])
                .catch(this.handleError);
   }
+
+  getRepoCharts(name: string): Promise<Chart[]> {
+    return this.http.get(this.reposUrl+'/' + name + '/' + 'charts')
+               .toPromise()
+               .then(response => response.json() as Chart[])
+               .catch(this.handleError);
+  }
+
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
