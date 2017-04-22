@@ -72,3 +72,23 @@ func (s *ServerContext) SaveHelmRepo(r HelmRepo) error {
 
 	return nil
 }
+
+func (s *ServerContext) DeleteHelmRepo(r HelmRepo) error {
+	// try to get the config map
+	configMap, err := s.k8sClient.CoreV1().GetConfigMap(s.ctx, s.configMapName, s.namespace)
+	if err != nil {
+		return err
+	}
+	// cannot delete the repo if one does not exist by that name
+	if _, ok := configMap.Data[r.Name]; !ok {
+		return fmt.Errorf("Repo '%' does not exist", r.Name)
+	}
+	delete(configMap.Data, r.Name)
+
+	_, err = s.k8sClient.CoreV1().UpdateConfigMap(s.ctx, configMap)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
