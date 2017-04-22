@@ -11,8 +11,9 @@ RUN adduser --system \
 COPY . /
 
 # Fix some permission since we'll be running as a non-root user
-RUN chown -R helm-ui:helm-ui /opt/helm-ui \
-    && chmod +x /opt/helm-ui/sbin/*
+RUN mkdir -p /opt/helm-ui/repository/cache \
+    && chown -R helm-ui:helm-ui /opt/helm-ui \
+    && chmod +x /opt/helm-ui/sbin/* 
 
 USER helm-ui
 WORKDIR /opt/helm-ui/sbin/
