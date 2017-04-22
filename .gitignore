@@ -2,9 +2,10 @@ vendor/
 rootfs/opt/helm-ui/sbin
 .DS_Store
 
-web/src/system-config.js*
-web/src/**/*.js
-web/src/**/*.map
+web/src/app/*.js
+web/src/app/*.map
+web/src/main.js
+web/src/main.js.map
 web/node_modules
 web/jspm_packages
 web/bower_components
