@@ -3,8 +3,8 @@ rootfs/opt/helm-ui/sbin
 .DS_Store
 
 web/src/system-config.js*
-web/src/app/**/*.js
-web/src/app/**/*.map
+web/src/app/*.js
+web/src/app/*.map
 web/node_modules
 web/jspm_packages
 web/bower_components
