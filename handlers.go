@@ -170,7 +170,8 @@ func (c ServerContext) HelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	home := helmpath.Home(homeDir)
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
 	cacheIndex, err := repo.LoadIndexFile(home.CacheIndex(vars["repo"]))
 	if err != nil {
 		log.Printf("failed to load cache index: %s", err)
@@ -191,6 +192,12 @@ func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (c ServerContext) HelmRepoChartInstallHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		return
+	}
 	vars := mux.Vars(r)
 	home := helmpath.Home(homeDir)
 

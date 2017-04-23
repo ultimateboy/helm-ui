@@ -17,7 +17,7 @@ import 'rxjs/add/operator/switchMap';
 
 export class ChartRepoDetailComponent implements OnInit {
 
-    repo: ChartRepo;
+    repo: string;
     charts: Chart[];
 
     constructor(
@@ -28,8 +28,13 @@ export class ChartRepoDetailComponent implements OnInit {
 
     ngOnInit(): void {
       this.route.params
-        .switchMap((params: Params) => this.chartRepoService.getRepoCharts(+params['name']))
+        .switchMap((params: Params) => this.chartRepoService.getRepoCharts(params['name']))
         .subscribe(charts => this.charts = charts);
+      this.repo = this.route.snapshot.params['name'];
+    }
+
+    install(chart: Chart): void {
+      this.chartRepoService.install(chart.name, this.repo);
     }
 
     goBack(): void {

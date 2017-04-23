@@ -8,8 +8,7 @@
   </button>
 </div>
 <ul class="heroes">
-  <li *ngFor="let repo of repos" (click)="onSelect(repo)"
-      [class.selected]="repo === selectedRepo">
+  <li *ngFor="let repo of repos" (click)="gotoDetail(repo)">
     <span class="badge">{{repo.name}}</span>
     <span>{{repo.url}}</span>
     <button class="delete"

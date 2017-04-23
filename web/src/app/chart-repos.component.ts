@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { ChartRepo } from './chart-repo';
 
@@ -14,7 +15,10 @@ export class ChartReposComponent implements OnInit {
   repos: ChartRepo[] = [];
   selectedRepo: ChartRepo;
 
-  constructor(private chartRepoService: ChartRepoService) { }
+  constructor(
+    private chartRepoService: ChartRepoService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.chartRepoService.getRepos()
@@ -24,6 +28,11 @@ export class ChartReposComponent implements OnInit {
   onSelect(chartRepo: ChartRepo): void {
     this.selectedRepo = chartRepo;
   }
+
+  gotoDetail(chartRepo: ChartRepo): void {
+    this.router.navigate(['/chart-repos/detail', chartRepo.name]);
+  }
+
 
   add(name: string, url: string): void {
     name = name.trim();

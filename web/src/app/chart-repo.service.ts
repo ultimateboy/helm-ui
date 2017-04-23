@@ -4,11 +4,13 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { ChartRepo } from './chart-repo';
-import { Chart } from './chart'
+import { Chart } from './chart';
+import { Release } from './release';
 
 @Injectable()
 export class ChartRepoService {
-  private reposUrl = 'http://104.197.249.14/repos';  // URL to web api
+  private reposUrl = 'http://146.148.44.109/repos';  // URL to web api
+
 
   constructor(private http: Http) { }
 
@@ -20,7 +22,7 @@ export class ChartRepoService {
   }
 
   getRepoCharts(name: string): Promise<Chart[]> {
-    return this.http.get(this.reposUrl+'/' + name + '/' + 'charts')
+    return this.http.get(this.reposUrl+'/'+name+'/charts')
                .toPromise()
                .then(response => response.json() as Chart[])
                .catch(this.handleError);
@@ -46,6 +48,14 @@ export class ChartRepoService {
       .post(this.reposUrl, JSON.stringify({name: name, url: url}), {headers: this.headers})
       .toPromise()
       .then(res => res.json() as ChartRepo)
+      .catch(this.handleError);
+  }
+
+  install(chart: string, repo: string): Promise<Release> {
+    return this.http
+      .post(this.reposUrl+'/'+repo+'/charts/'+chart+'/install', JSON.stringify({name: name}), {headers: this.headers})
+      .toPromise()
+      .then(res => res.json() as Release)
       .catch(this.handleError);
   }
 
