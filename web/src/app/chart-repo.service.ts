@@ -11,7 +11,6 @@ import { Release } from './release';
 export class ChartRepoService {
   private reposUrl = 'http://146.148.44.109/repos';  // URL to web api
 
-
   constructor(private http: Http) { }
 
   getRepos(): Promise<ChartRepo[]> {

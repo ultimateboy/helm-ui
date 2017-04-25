@@ -7,12 +7,19 @@ import { Release } from './release';
 
 @Injectable()
 export class ReleaseService {
-  private reposUrl = 'http://146.148.44.109/releases';  // URL to web api
+  private releasesUrl = 'http://146.148.44.109/releases';  // URL to web api
 
   constructor(private http: Http) { }
 
   getReleases(): Promise<Release[]> {
-    return this.http.get(this.reposUrl)
+    return this.http.get(this.releasesUrl)
+               .toPromise()
+               .then(response => response.json() as Release[])
+               .catch(this.handleError);
+  }
+
+  getChartReleases(name: string): Promise<Release[]> {
+    return this.http.get(this.releasesUrl+"?chart="+name)
                .toPromise()
                .then(response => response.json() as Release[])
                .catch(this.handleError);

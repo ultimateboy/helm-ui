@@ -5,8 +5,7 @@
     <span class="badge">{{chart.name }}</span>
     <span><img src="{{chart.icon}}" /></span>
     <span>{{ chart.description }} </span>
-    <button class="install"
-      (click)="install(chart)">install</button>
+    <chart-releases [repoName]="repo" [chartName]="chart.name"></chart-releases>
   </li>
   </ul>
 

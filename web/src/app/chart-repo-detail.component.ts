@@ -33,10 +33,6 @@ export class ChartRepoDetailComponent implements OnInit {
       this.repo = this.route.snapshot.params['name'];
     }
 
-    install(chart: Chart): void {
-      this.chartRepoService.install(chart.name, this.repo);
-    }
-
     goBack(): void {
       this.location.back();
     }
