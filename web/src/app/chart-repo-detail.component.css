@@ -39,8 +39,8 @@
   width: 10em;
 }
 
-.heroes .badge img {
-  width: 200px;
+.heroes img {
+  max-width: 200px;
 
 }
 

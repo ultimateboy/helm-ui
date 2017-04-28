@@ -3,7 +3,7 @@
       (click)="install()">install</button>
   <div *ngIf="releases">
     <h4>Releases:</h4>
-    <ul class="heroes">
+    <ul class="releases">
     <li *ngFor="let release of releases">
       <span>{{release.name}}</span>
       {{release.namespace}}

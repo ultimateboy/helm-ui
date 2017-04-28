@@ -6,6 +6,8 @@ web/src/app/*.js
 web/src/app/*.map
 web/src/main.js
 web/src/main.js.map
+web/src/app/config/*.js
+web/src/app/config/*.map
 web/node_modules
 web/jspm_packages
 web/bower_components
