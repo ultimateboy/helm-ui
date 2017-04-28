@@ -8,6 +8,7 @@ import { Release } from './release';
 
 @Injectable()
 export class ReleaseService {
+
   private reposUrl = APIURL + '/releases';
 
   constructor(private http: Http) { }

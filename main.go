@@ -48,7 +48,7 @@ func main() {
 	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET", "OPTIONS")
 	r.HandleFunc("/repos/{repo}", serverContext.HelmRepoHandler).Methods("DELETE")
 	r.HandleFunc("/repos/{repo}/charts", serverContext.HelmRepoChartsHandler).Methods("GET")
-	r.HandleFunc("/repos/{repo}/charts/{chart}/install", serverContext.HelmRepoChartInstallHandler).Methods("POST")
+	r.HandleFunc("/repos/{repo}/charts/{chart}/install", serverContext.HelmRepoChartInstallHandler).Methods("POST", "OPTIONS")
 
 	http.Handle("/", r)
 

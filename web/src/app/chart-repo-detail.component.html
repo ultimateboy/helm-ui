@@ -1,0 +1,15 @@
+<div *ngIf="charts">
+  <h2>Charts from {{ repo }}</h2>
+  <ul class="heroes">
+  <li *ngFor="let chart of charts">
+    <span class="badge">{{chart.name }}</span>
+    <span><img src="{{chart.icon}}" /></span>
+    <span>{{ chart.description }} </span>
+    <button class="install"
+      (click)="install(chart)">install</button>
+  </li>
+  </ul>
+
+
+  <button (click)="goBack()">Back</button>
+</div>
