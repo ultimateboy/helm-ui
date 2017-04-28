@@ -13,6 +13,7 @@ import (
 	"k8s.io/helm/pkg/downloader"
 	"k8s.io/helm/pkg/helm"
 	"k8s.io/helm/pkg/helm/helmpath"
+	"k8s.io/helm/pkg/proto/hapi/release"
 	"k8s.io/helm/pkg/repo"
 )
 
@@ -37,6 +38,15 @@ func NewServerContext(ctx context.Context, host string, namespace string, config
 		namespace:     namespace,
 		configMapName: configMapName,
 	}
+}
+
+func FilterRleases(rels []*release.Release, chart string) (ret []*release.Release) {
+	for _, v := range rels {
+		if v.Chart.Metadata.Name == chart {
+			ret = append(ret, v)
+		}
+	}
+	return ret
 }
 
 func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +93,16 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 			log.Printf("failed to list releases: %v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		err = json.NewEncoder(w).Encode(releases.GetReleases())
+
+		rels := releases.GetReleases()
+
+		query := r.URL.Query()
+		filter := query.Get("chart")
+		if filter != "" {
+			rels = FilterRleases(rels, filter)
+		}
+
+		err = json.NewEncoder(w).Encode(rels)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

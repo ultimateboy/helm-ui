@@ -9,12 +9,19 @@ import { Release } from './release';
 @Injectable()
 export class ReleaseService {
 
-  private reposUrl = APIURL + '/releases';
+  private releasesUrl = APIURL + '/releases';
 
   constructor(private http: Http) { }
 
   getReleases(): Promise<Release[]> {
-    return this.http.get(this.reposUrl)
+    return this.http.get(this.releasesUrl)
+               .toPromise()
+               .then(response => response.json() as Release[])
+               .catch(this.handleError);
+  }
+
+  getChartReleases(name: string): Promise<Release[]> {
+    return this.http.get(this.releasesUrl+"?chart="+name)
                .toPromise()
                .then(response => response.json() as Release[])
                .catch(this.handleError);
