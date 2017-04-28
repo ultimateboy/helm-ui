@@ -1,0 +1,1 @@
+export var APIURL = 'http://localhost:8080';

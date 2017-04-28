@@ -1,13 +1,15 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
-
 import 'rxjs/add/operator/toPromise';
+import { APIURL } from './config/config';
+
 
 import { Release } from './release';
 
 @Injectable()
 export class ReleaseService {
-  private reposUrl = 'http://146.148.44.109/releases';  // URL to web api
+
+  private reposUrl = APIURL + '/releases';
 
   constructor(private http: Http) { }
 
@@ -31,7 +33,5 @@ export class ReleaseService {
   }
 
   private headers = new Headers({'Content-Type': 'application/json'});
-
-
 
 }
