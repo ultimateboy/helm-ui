@@ -16,7 +16,7 @@ make build
 
 ## Deploying
 ```bash
-helm install charts/helm-ui
+helm install --set dashboard.domain=traefik.helm.tucker.me charts/helm-ui
 ```
 
 
