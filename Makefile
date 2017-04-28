@@ -1,11 +1,14 @@
 SHORT_NAME ?= helm-ui
+FRONTEND_SUFFIX ?= frontend
 IMAGE_PREFIX ?= ultimateboy
 VERSION ?= git-$(shell git rev-parse --short HEAD)
 IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}:${VERSION}
+FRONTEND_IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}-${FRONTEND_SUFFIX}:${VERSION}
 REPO_PATH := github.com/deis/${SHORT_NAME}
 
 MUTABLE_VERSION ?= canary
 MUTABLE_IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}:${MUTABLE_VERSION}
+FRONTEND_MUTABLE_IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}-${FRONTEND_SUFFIX}:${MUTABLE_VERSION}
 
 DEV_ENV_IMAGE := quay.io/deis/go-dev:0.20.0
 DEV_ENV_WORK_DIR := /go/src/${REPO_PATH}
@@ -28,9 +31,8 @@ install-deps:
 bootstrap:
 	glide install
 
-build: build-binary-in-container build-image
-push: docker-push
-
+build: build-binary-in-container build-image build-frontend-image
+push: docker-push docker-frontend-push
 
 run-interactive:
 	docker run -it ${IMAGE} bash
@@ -48,6 +50,23 @@ build-image:
 	 	--build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` \
 		-t ${IMAGE} rootfs
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
+
+build-frontend-image:
+	docker build \
+		--pull \
+		--build-arg VERSION=${VERSION} \
+	 	--build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` \
+		-t ${FRONTEND_IMAGE} web
+	docker tag ${FRONTEND_IMAGE} ${FRONTEND_MUTABLE_IMAGE}
+
+docker-frontend-push: docker-frontend-mutable-push docker-frontend-immutable-push
+
+docker-frontend-immutable-push:
+	docker push ${FRONTEND_IMAGE}
+
+docker-frontend-mutable-push:
+	docker push ${FRONTEND_MUTABLE_IMAGE}
+
 
 docker-push: docker-mutable-push docker-immutable-push
 

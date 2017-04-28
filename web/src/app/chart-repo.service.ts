@@ -1,5 +1,6 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
+import { APIURL } from './config/config';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -7,7 +8,7 @@ import { ChartRepo } from './chart-repo';
 
 @Injectable()
 export class ChartRepoService {
-  private reposUrl = 'http://104.197.249.14/repos';  // URL to web api
+  private reposUrl = APIURL + '/repos';
 
   constructor(private http: Http) { }
 

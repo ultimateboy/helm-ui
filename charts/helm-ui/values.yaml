@@ -1,16 +1,34 @@
-app:
-  name: helm-ui
+basedomain: example.com
+
+api:
+  name: api
   port: 8080
-  serviceType: LoadBalancer
+  serviceType: NodePort
+  domain: api
 
-tiller:
-  host: tiller-deploy.kube-system.svc.cluster.local:44134
+  tiller:
+    host: tiller-deploy.kube-system.svc.cluster.local:44134
 
-image:
-  registry: docker.io
-  org: ultimateboy
-  name: helm-ui
-  tag: canary
+  image:
+    registry: docker.io
+    org: ultimateboy
+    name: helm-ui
+    tag: canary
 
-  # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
-  pullPolicy: Always
+    # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
+    pullPolicy: Always
+
+frontend:
+  name: frontend
+  port: 3000
+  serviceType: NodePort
+  domain: frontend
+  
+  image:
+    registry: docker.io
+    org: ultimateboy
+    name: helm-ui-frontend
+    tag: canary
+
+    # ImagePullPolicy; valid values are "IfNotPresent" and "Always"
+    pullPolicy: Always

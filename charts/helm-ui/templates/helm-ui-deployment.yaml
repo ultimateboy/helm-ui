@@ -20,16 +20,31 @@ spec:
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
     spec:
+      volumes:
+        - name: api-config
+          configMap:
+            name: {{ .Release.Name }}-config
       containers:
-      - name: {{ .Values.app.name }}
-        image: {{ .Values.image.registry }}/{{ .Values.image.org }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+      - name: {{ .Values.api.name }}
+        image: {{ .Values.api.image.registry }}/{{ .Values.api.image.org }}/{{ .Values.api.image.name }}:{{ .Values.api.image.tag }}
+        imagePullPolicy: {{ .Values.api.image.pullPolicy }}
         env:
         - name: PORT
-          value: {{ .Values.app.port | quote }}
+          value: {{ .Values.api.port | quote }}
         - name: TILLER_HOST
-          value: {{ .Values.tiller.host }}
+          value: {{ .Values.api.tiller.host }}
         command: 
         - "./helm-ui"
         ports:
-        - containerPort: {{ .Values.app.port }}
+        - containerPort: {{ .Values.api.port }}
+      - name: {{ .Values.frontend.name }}
+        image: {{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.org }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        command:
+        - "npm"
+        - "start"
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+        volumeMounts:
+        - name: api-config
+          mountPath: /usr/src/app/src/app/config
