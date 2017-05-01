@@ -19,6 +19,7 @@ export class ChartRepoDetailComponent implements OnInit {
 
     repo: string;
     charts: Chart[];
+    filtered: Chart[] = [];
 
     constructor(
       private chartRepoService: ChartRepoService,
@@ -29,8 +30,18 @@ export class ChartRepoDetailComponent implements OnInit {
     ngOnInit(): void {
       this.route.params
         .switchMap((params: Params) => this.chartRepoService.getRepoCharts(params['name']))
-        .subscribe(charts => this.charts = charts);
+        .subscribe(charts => {
+          this.charts = charts
+          this.filtered = Object.assign([], charts);
+        });
       this.repo = this.route.snapshot.params['name'];
+    }
+
+    filterCharts(value: string): void{
+      if(!value) this.filtered = Object.assign([], this.charts);
+      this.filtered = Object.assign([], this.charts).filter(
+          item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+      );
     }
 
     goBack(): void {
