@@ -60,4 +60,12 @@ export class ChartRepoService {
       .catch(this.handleError);
   }
 
+  search(repo: string, term: string): Promise<Chart[]> {
+    return this.http.get(this.reposUrl+'/'+repo+'/charts?name='+ term)
+               .toPromise()
+               .then(response => response.json() as Chart[])
+               .catch(this.handleError);
+  }
+
+
 }

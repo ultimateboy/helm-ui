@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/ericchiang/k8s"
 	"github.com/gorilla/mux"
@@ -198,8 +199,17 @@ func (c ServerContext) HelmRepoChartsHandler(w http.ResponseWriter, r *http.Requ
 	}
 	cacheIndex.SortEntries()
 
+	query := r.URL.Query()
+	filter := query.Get("name")
+
 	var cvs []*repo.ChartVersion
 	for _, chartVersions := range cacheIndex.Entries {
+		if filter != "" {
+			if strings.HasPrefix(chartVersions[0].Name, filter) {
+				cvs = append(cvs, chartVersions[0])
+			}
+			continue
+		}
 		// for now we only care about the first version (the latest)
 		cvs = append(cvs, chartVersions[0])
 	}
