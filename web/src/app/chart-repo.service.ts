@@ -60,6 +60,14 @@ export class ChartRepoService {
       .catch(this.handleError);
   }
 
+  delete(name: string): Promise<ChartRepo> {
+    return this.http
+      .delete(this.reposUrl + '/'+name)
+      .toPromise()
+      .then(res => res.json() as ChartRepo)
+      .catch(this.handleError);
+  }
+
   search(repo: string, term: string): Promise<Chart[]> {
     return this.http.get(this.reposUrl+'/'+repo+'/charts?name='+ term)
                .toPromise()

@@ -44,9 +44,9 @@ func main() {
 
 	r.HandleFunc("/", serverContext.HomeHandler)
 	r.HandleFunc("/releases", serverContext.ReleaseHandler).Methods("GET")
-	r.HandleFunc("/releases/{release}", serverContext.ReleaseHandler).Methods("GET", "DELETE")
+	r.HandleFunc("/releases/{release}", serverContext.ReleaseHandler).Methods("GET", "DELETE", "OPTIONS")
 	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET", "OPTIONS")
-	r.HandleFunc("/repos/{repo}", serverContext.HelmRepoHandler).Methods("DELETE")
+	r.HandleFunc("/repos/{repo}", serverContext.HelmRepoHandler).Methods("DELETE", "OPTIONS")
 	r.HandleFunc("/repos/{repo}/charts", serverContext.HelmRepoChartsHandler).Methods("GET")
 	r.HandleFunc("/repos/{repo}/charts/{chart}/install", serverContext.HelmRepoChartInstallHandler).Methods("POST", "OPTIONS")
 

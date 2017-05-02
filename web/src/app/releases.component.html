@@ -3,10 +3,10 @@
 <ul class="heroes">
   <li *ngFor="let release of releases" (click)="onSelect(release)"
       [class.selected]="release === selectedRelease">
-    <span class="badge">{{release.namespace}}</span>
+    <span class="badge">{{release.chart.metadata.name}}</span>
     <span>{{release.name}}</span>
     <button class="delete"
-      (click)="delete(release); $event.stopPropagation()">x</button>
+      (click)="$event.stopPropagation(); delete(release.name);">x</button>
   </li>
 </ul>
 

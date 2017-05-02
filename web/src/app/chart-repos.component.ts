@@ -44,4 +44,13 @@ export class ChartReposComponent implements OnInit {
       });
   }
 
+  delete(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.chartRepoService.delete(name)
+      .then(repo => {
+        this.repos = this.repos.filter(rep => rep.name !== name)
+      });
+  }
+
 }
