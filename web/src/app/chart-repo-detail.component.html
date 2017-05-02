@@ -1,7 +1,8 @@
 <div *ngIf="charts">
   <h2>Charts from {{ repo }}</h2>
+  <input #myInput (input)="filterCharts(myInput.value)" />
   <ul class="heroes">
-  <li *ngFor="let chart of charts">
+  <li *ngFor="let chart of filtered">
     <span class="badge">{{chart.name }}</span>
     <span><img src="{{chart.icon}}" /></span>
     <span>{{ chart.description }} </span>
