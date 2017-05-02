@@ -43,12 +43,12 @@ export class ReleasesComponent implements OnInit {
   //     });
   // }
 
-  // delete(hero: Hero): void {
-  //   this.heroService
-  //       .delete(hero.id)
-  //       .then(() => {
-  //         this.heroes = this.heroes.filter(h => h !== hero);
-  //         if (this.selectedHero === hero) { this.selectedHero = null; }
-  //       });
-  // }
+  delete(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.releaseService.delete(name)
+      .then(response => {
+        this.releases = this.releases.filter(rel => rel.name !== name)
+      });
+  }
 }

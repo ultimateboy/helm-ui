@@ -3,7 +3,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { APIURL } from './config/config';
 
-
+import { Response } from './response';
 import { Release } from './release';
 
 @Injectable()
@@ -40,5 +40,13 @@ export class ReleaseService {
   }
 
   private headers = new Headers({'Content-Type': 'application/json'});
+
+  delete(name: string): Promise<Response> {
+    return this.http
+      .delete(this.releasesUrl + '/'+name)
+      .toPromise()
+      .then(res => res.json() as Response)
+      .catch(this.handleError);
+  }
 
 }

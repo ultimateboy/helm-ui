@@ -12,6 +12,6 @@
     <span class="badge">{{repo.name}}</span>
     <span>{{repo.url}}</span>
     <button class="delete"
-      (click)="delete(repo); $event.stopPropagation()">x</button>
+      (click)="$event.stopPropagation(); delete(repo.name);">x</button>
   </li>
 </ul>
