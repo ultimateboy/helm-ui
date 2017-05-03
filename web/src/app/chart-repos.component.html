@@ -1,17 +1,27 @@
-<h3>Stored Chart Repositories</h3>
 
-<div>
-  <label>Repo name:</label> <input #repoName />
-  <label>Repo URL:</label> <input #repoUrl />
-  <button (click)="add(repoName.value, repoUrl.value); repoName.value=''; repoUrl.value=''">
-    Add
-  </button>
-</div>
-<ul class="heroes">
-  <li *ngFor="let repo of repos" (click)="gotoDetail(repo)">
-    <span class="badge">{{repo.name}}</span>
-    <span>{{repo.url}}</span>
-    <button class="delete"
-      (click)="$event.stopPropagation(); delete(repo.name);">x</button>
-  </li>
-</ul>
+
+  <h3>Chart Repositories</h3>
+
+    <md-input-container>
+      <input mdInput #repoName placeholder="Name" />
+    </md-input-container>
+    <md-input-container>
+      <input mdInput #repoUrl placeholder="URL" />
+    </md-input-container>
+    <button class="app-button" md-button>
+      <md-icon (click)="add(repoName.value, repoUrl.value); repoName.value=''; repoUrl.value=''">add</md-icon>
+    </button>
+
+    <md-card>
+      <md-card-content>
+        <md-list class="heroes">
+          <md-list-item *ngFor="let repo of repos"
+              (click)="gotoDetail(repo)">
+            <span class="badge">{{repo.name}}</span>
+            <span>{{repo.url}}</span>
+            <md-icon class="delete" (click)="$event.stopPropagation(); delete(repo.name);">delete</md-icon>   
+          </md-list-item>
+        </md-list>
+      </md-card-content>
+    </md-card>
+

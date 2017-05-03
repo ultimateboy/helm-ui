@@ -1,12 +1,13 @@
 <h2>Releases</h2>
 
-<ul class="heroes">
-  <li *ngFor="let release of releases" (click)="onSelect(release)"
-      [class.selected]="release === selectedRelease">
-    <span class="badge">{{release.chart.metadata.name}}</span>
-    <span>{{release.name}}</span>
-    <button class="delete"
-      (click)="$event.stopPropagation(); delete(release.name);">x</button>
-  </li>
-</ul>
-
+<md-card>
+  <md-card-content>
+    <md-list class="heroes">
+      <md-list-item *ngFor="let release of releases">
+        <span class="badge">{{release.chart.metadata.name}}</span>
+        <span>{{release.name}}</span>
+        <md-icon class="delete" (click)="$event.stopPropagation(); delete(release.name);">delete</md-icon>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+</md-card>
