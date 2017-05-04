@@ -1,13 +1,18 @@
-<h2>Releases</h2>
+<h2>Dashboard</h2>
 
-<md-card>
+<md-card class="heroes" *ngFor="let release of releases">
   <md-card-content>
-    <md-list class="heroes">
-      <md-list-item *ngFor="let release of releases">
-        <span class="badge">{{release.chart.metadata.name}}</span>
-        <span>{{release.name}}</span>
-        <md-icon class="delete" (click)="$event.stopPropagation(); delete(release.name);">delete</md-icon>
-      </md-list-item>
-    </md-list>
+    <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3>
+    <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
+    <p>{{release.chart.metadata.description}}</p>
+    <button md-button (click)="$event.stopPropagation(); delete(release.name);">
+      <md-icon>delete</md-icon>&nbsp;delete
+    </button>
+    <button *ngIf="release.config.raw" md-button (click)="openDialog(release.config.raw)">
+      <md-icon>settings</md-icon>&nbsp;config
+    </button>
+    <button *ngIf="release.chart.values" md-button (click)="openDialog(release.chart.values.raw)">
+      <md-icon>input</md-icon>&nbsp;values
+    </button>
   </md-card-content>
 </md-card>

@@ -28,25 +28,15 @@
   position: relative;
   top: -3px;
 }
-.heroes .badge {
+h3 {
   display: inline-block;
-  color: white;
-  padding: 0.8em 0.7em 0 0.7em;
-  background-color: #607D8B;
+  color: black;
   line-height: 1em;
   position: relative;
-  left: -1px;
-  top: -4px;
   height: 1.8em;
-  margin-right: .8em;
-  width: 10em;
+  font-size: 1.4em;
 }
 
-.delete:hover {
-  color: red;
-  left: 1px;
-}
-.delete {
-  float:right !important;
-  margin-left: 10em;
+md-card-content {
+  padding: 0.8em 0.7em 0 0.7em;
 }

@@ -3,16 +3,16 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'my-app',
   template: `
-  <md-sidenav-container [class.m2app-dark]="isDarkTheme">
+  <md-sidenav-container>
 
   <md-sidenav #sidenav mode="over" class="app-sidenav" color="primary">
     <md-toolbar>
       <span>Options</span>
       <md-toolbar-row>
-        <a routerLink="/chart-repos" (click)="sidenav.toggle()" routerLinkActive="active"><button class="app-button" md-button>Chart Repos</button></a>
+        <a routerLink="/dashboard" (click)="sidenav.toggle()" routerLinkActive="active"><button class="app-button" md-button>Dashboard</button></a>
       </md-toolbar-row>
       <md-toolbar-row>
-        <a routerLink="/releases" (click)="sidenav.toggle()" routerLinkActive="active"><button class="app-button" md-button>Releases</button></a>
+        <a routerLink="/chart-repos" (click)="sidenav.toggle()" routerLinkActive="active"><button class="app-button" md-button>Chart Repos</button></a>
       </md-toolbar-row>
     </md-toolbar>
    </md-sidenav>

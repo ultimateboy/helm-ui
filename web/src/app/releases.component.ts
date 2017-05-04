@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
 import { Release } from './release';
 import { ReleaseService } from './release.service';
@@ -15,7 +16,9 @@ export class ReleasesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private releaseService: ReleaseService) { }
+    private releaseService: ReleaseService,
+    private _dialog: MdDialog
+  ) { }
 
   getReleases(): void {
     this.releaseService.getReleases().then(releases => this.releases = releases);
@@ -51,4 +54,28 @@ export class ReleasesComponent implements OnInit {
         this.releases = this.releases.filter(rel => rel.name !== name)
       });
   }
+
+  openDialog(config: string) {
+    const dialogRef = this._dialog.open(DialogContentComponent, {
+      data: config,
+    });
+
+  }
+
+}
+
+
+@Component({
+  template: `
+    <pre>
+      {{ data }}
+    </pre>
+    <button md-button (click)="dialogRef.close()">CLOSE</button>
+  `,
+})
+export class DialogContentComponent {
+  constructor( 
+    @Optional() public dialogRef: MdDialogRef<DialogContentComponent>,
+    @Inject(MD_DIALOG_DATA) public data: any
+  ) { }
 }

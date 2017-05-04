@@ -13,7 +13,7 @@ import { AppComponent }         from './app.component';
 import { ChartReposComponent }   from './chart-repos.component';
 import { ChartRepoDetailComponent } from './chart-repo-detail.component';
 
-import { ReleasesComponent }      from './releases.component';
+import { ReleasesComponent, DialogContentComponent }      from './releases.component';
 import { ChartReleasesComponent } from './chart-releases.component'
 
 import { ReleaseService }          from './release.service';
@@ -34,11 +34,13 @@ import { ChartRepoService }          from './chart-repo.service';
     ReleasesComponent,
     ChartRepoDetailComponent,
     ChartReleasesComponent,
+    DialogContentComponent
   ],
   providers: [ 
     ReleaseService,
     ChartRepoService
   ],
+  entryComponents: [ DialogContentComponent ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
