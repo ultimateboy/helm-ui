@@ -107,8 +107,22 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+	case "PATCH":
+		decoder := json.NewDecoder(r.Body)
+		var newRepo map[string]interface{}
+		err := decoder.Decode(&newRepo)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		defer r.Body.Close()
+		log.Println(newRepo)
+		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
+		if err != nil {
+			log.Printf("failed to write json: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	case "OPTIONS":
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 }

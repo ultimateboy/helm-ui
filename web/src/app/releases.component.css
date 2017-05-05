@@ -1,33 +1,4 @@
-.selected {
-  background-color: #CFD8DC !important;
-  color: white;
-}
-.heroes {
-  margin: 0 0 2em 0;
-  list-style-type: none;
-  padding: 0;
-  width: 50em;
-}
-.heroes md-list-item {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #EEE;
 
-}
-.heroes md-list-item:hover {
-  color: #607D8B;
-  background-color: #DDD;
-  left: .1em;
-}
-.heroes md-list-item.selected:hover {
-  background-color: #BBD8DC !important;
-  color: white;
-}
-.heroes .text {
-  position: relative;
-  top: -3px;
-}
 h3 {
   display: inline-block;
   color: black;

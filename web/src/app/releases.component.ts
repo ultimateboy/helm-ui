@@ -13,6 +13,7 @@ import { ReleaseService } from './release.service';
 export class ReleasesComponent implements OnInit {
   releases: Release[];
   selectedRelease: Release;
+  dialogResp: string;
 
   constructor(
     private router: Router,
@@ -55,11 +56,17 @@ export class ReleasesComponent implements OnInit {
       });
   }
 
-  openDialog(config: string) {
+  openEditDialog(name: string, config: string) {
     const dialogRef = this._dialog.open(DialogContentComponent, {
       data: config,
     });
-
+    dialogRef.afterClosed().subscribe(result => {
+      this.dialogResp = result;
+      if (result) {
+        console.log(result);
+        this.releaseService.updateValues(name, result)
+      }
+    })
   }
 
 }
@@ -67,13 +74,26 @@ export class ReleasesComponent implements OnInit {
 
 @Component({
   template: `
-    <pre>
-      {{ data }}
-    </pre>
-    <button md-button (click)="dialogRef.close()">CLOSE</button>
+    <textarea #editorInput>
+{{ data }}
+    </textarea>
+    <br />
+    <button color="accent" md-button (click)="dialogRef.close(editorInput.value)">
+      <md-icon>save</md-icon> save
+    </button>
+    <button color="accent" md-button (click)="dialogRef.close()">
+      <md-icon>cancel</md-icon> cancel
+    </button>
   `,
+  styles: [`
+    textarea {
+      width: 50em;
+      height: 50em;
+    }
+  `],
 })
 export class DialogContentComponent {
+  code: string;
   constructor( 
     @Optional() public dialogRef: MdDialogRef<DialogContentComponent>,
     @Inject(MD_DIALOG_DATA) public data: any

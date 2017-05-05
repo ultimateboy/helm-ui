@@ -5,14 +5,14 @@
     <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3>
     <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
     <p>{{release.chart.metadata.description}}</p>
-    <button md-button (click)="$event.stopPropagation(); delete(release.name);">
-      <md-icon>delete</md-icon>&nbsp;delete
-    </button>
-    <button *ngIf="release.config.raw" md-button (click)="openDialog(release.config.raw)">
+    <button color="primary" *ngIf="release.config.raw" md-button (click)="openEditDialog(release.name, release.config.raw)">
       <md-icon>settings</md-icon>&nbsp;config
     </button>
-    <button *ngIf="release.chart.values" md-button (click)="openDialog(release.chart.values.raw)">
+    <button color="primary" *ngIf="release.chart.values" md-button (click)="openEditDialog(release.name, release.chart.values.raw)">
       <md-icon>input</md-icon>&nbsp;values
+    </button>
+    <button color="primary" md-button (click)="$event.stopPropagation(); delete(release.name);">
+      <md-icon>delete</md-icon>&nbsp;delete
     </button>
   </md-card-content>
 </md-card>
