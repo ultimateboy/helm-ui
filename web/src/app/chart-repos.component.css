@@ -1,50 +1,24 @@
-.selected {
-  background-color: #CFD8DC !important;
-  color: white;
-}
-.heroes {
-  margin: 0 0 2em 0;
-  list-style-type: none;
-  padding: 0;
-  width: 50em;
-}
-.heroes md-list-item {
+
+md-list-item {
   cursor: pointer;
   position: relative;
   left: 0;
   background-color: #EEE;
-
 }
-.heroes md-list-item:hover {
-  color: #607D8B;
+md-list-item:hover {
   background-color: #DDD;
   left: .1em;
 }
-.heroes md-list-item.selected:hover {
-  background-color: #BBD8DC !important;
-  color: white;
-}
-.heroes .text {
-  position: relative;
-  top: -3px;
-}
-.heroes .badge {
-  display: inline-block;
-  color: white;
-  padding: 0.8em 0.7em 0 0.7em;
-  background-color: #607D8B;
-  line-height: 1em;
-  position: relative;
+
+span.name {
+  padding: 0 0.8em 0 0.7em;
   left: -1px;
-  top: -4px;
-  height: 1.8em;
-  margin-right: .8em;
-  width: 10em;
 }
 
 .delete:hover {
   color: red;
   left: 1px;
+  cursor: pointer;
 }
 .delete {
   float:right !important;

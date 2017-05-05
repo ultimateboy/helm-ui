@@ -11,3 +11,10 @@ h3 {
 md-card-content {
   padding: 0.8em 0.7em 0 0.7em;
 }
+
+.app-action {
+    display: inline-block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

@@ -10,8 +10,8 @@
 
   <md-card class="app-input-section" *ngFor="let chart of filtered">
     <md-card-content>
-      <span class="badge">{{chart.name }}</span>
-      <span><img src="{{chart.icon}}" /></span>
+      <h3>{{chart.name }}</h3>
+      <span class="chart-icon"><img src="{{chart.icon}}" /></span>
       <span>{{ chart.description }} </span>
       <chart-releases [repoName]="repo" [chartName]="chart.name"></chart-releases>
     </md-card-content>

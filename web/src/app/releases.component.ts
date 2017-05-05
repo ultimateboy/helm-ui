@@ -56,9 +56,9 @@ export class ReleasesComponent implements OnInit {
       });
   }
 
-  openEditDialog(name: string, config: string) {
+  openEditDialog(name: string, config: string, values: string) {
     const dialogRef = this._dialog.open(DialogContentComponent, {
-      data: config,
+      data: {'config':config, 'values':values},
     });
     dialogRef.afterClosed().subscribe(result => {
       this.dialogResp = result;
@@ -75,8 +75,11 @@ export class ReleasesComponent implements OnInit {
 @Component({
   template: `
     <textarea #editorInput>
-{{ data }}
+{{ data.config }}
     </textarea>
+    <pre>
+{{ data.values }}
+    </pre>
     <br />
     <button color="accent" md-button (click)="dialogRef.close(editorInput.value)">
       <md-icon>save</md-icon> save
@@ -88,7 +91,16 @@ export class ReleasesComponent implements OnInit {
   styles: [`
     textarea {
       width: 50em;
-      height: 50em;
+      height: 10em;
+    }
+    pre {
+      width: 50em;
+      height: 10em;
+      overflow: auto;
+      background-color: #eeeeee;
+      word-break: normal !important;
+      word-wrap: normal !important;
+      white-space: pre !important;
     }
   `],
 })

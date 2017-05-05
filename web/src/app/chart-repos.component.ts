@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 
 import { ChartRepo } from './chart-repo';
 
@@ -17,7 +19,8 @@ export class ChartReposComponent implements OnInit {
 
   constructor(
     private chartRepoService: ChartRepoService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -33,6 +36,9 @@ export class ChartReposComponent implements OnInit {
     this.router.navigate(['/chart-repos/detail', chartRepo.name]);
   }
 
+  goBack(): void {
+    this.location.back();
+  }
 
   add(name: string, url: string): void {
     name = name.trim();
