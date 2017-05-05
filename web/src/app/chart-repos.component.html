@@ -8,8 +8,8 @@
     <md-input-container>
       <input mdInput #repoUrl placeholder="URL" />
     </md-input-container>
-    <button class="app-button" md-button>
-      <md-icon (click)="add(repoName.value, repoUrl.value); repoName.value=''; repoUrl.value=''">add</md-icon>
+    <button (click)="add(repoName.value, repoUrl.value); repoName.value=''; repoUrl.value=''" class="app-button" md-button>
+      <md-icon>add</md-icon>
     </button>
 
     <md-card>
