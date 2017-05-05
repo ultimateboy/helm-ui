@@ -9,7 +9,7 @@ COPY package.json /usr/src/app/
 RUN npm install
 
 # Copy node modules for hopeful reuse
-COPY node_modules /usr/src/app/node_modules
+COPY ./node_modules /usr/src/app/node_modules
 
 # Bundle app source
 COPY . /usr/src/app/
