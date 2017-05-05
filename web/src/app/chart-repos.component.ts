@@ -12,7 +12,7 @@ import { ChartRepoService } from './chart-repo.service';
 })
 export class ChartReposComponent implements OnInit {
 
-  repos: ChartRepo[] = [];
+  repos: ChartRepo[];
   selectedRepo: ChartRepo;
 
   constructor(
@@ -39,8 +39,8 @@ export class ChartReposComponent implements OnInit {
     if (!name) { return; }
     this.chartRepoService.create(name, url)
       .then(repo => {
+        if (!this.repos) this.repos = [];
         this.repos.push(repo);
-        this.selectedRepo = null;
       });
   }
 
