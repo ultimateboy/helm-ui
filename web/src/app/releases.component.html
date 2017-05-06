@@ -1,6 +1,6 @@
 <h2>Dashboard</h2>
 
-<md-card class="heroes" *ngFor="let release of releases">
+<md-card class="releases" *ngFor="let release of releases">
   <md-card-content>
     <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3>
     <comp-bar [templates]="release.chart.templates"></comp-bar>
