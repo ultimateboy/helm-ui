@@ -14,6 +14,7 @@ export class ReleasesComponent implements OnInit {
   releases: Release[];
   selectedRelease: Release;
   dialogResp: string;
+  loading: boolean;
 
   constructor(
     private router: Router,
@@ -27,6 +28,10 @@ export class ReleasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getReleases();
+  }
+
+  toggleLoad(r: Release): void {
+    r.loading = r.loading ? false: true; 
   }
 
   onSelect(release: Release): void {
@@ -54,7 +59,7 @@ export class ReleasesComponent implements OnInit {
       .then(response => {
         this.releases = this.releases.filter(rel => rel.name !== name)
       });
-  }
+}
 
   openEditDialog(name: string, config: string, values: string) {
     const dialogRef = this._dialog.open(DialogContentComponent, {

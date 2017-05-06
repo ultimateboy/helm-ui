@@ -31,3 +31,10 @@ div.chart-releases {
   height: auto !important;
   overflow: auto;
 }
+
+md-spinner {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+
+}

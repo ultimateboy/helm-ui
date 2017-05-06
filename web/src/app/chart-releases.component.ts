@@ -24,6 +24,7 @@ export class ChartReleasesComponent implements OnInit {
   @Input() repoName: string;
 
   releases: Release[];
+  loading: boolean;
 
   constructor(
     private releaseService: ReleaseService,
@@ -38,6 +39,10 @@ export class ChartReleasesComponent implements OnInit {
     this.getChartReleases(this.chartName);
   }
 
+  toggleLoad(): void {
+    this.loading = this.loading ? false : true;
+  }
+
   install(): void {
     this.chartRepoService.install(this.chartName, this.repoName)
       .then(release => {
@@ -46,6 +51,7 @@ export class ChartReleasesComponent implements OnInit {
         } else {
             this.releases = [release];
         }
+        this.router.navigate(['/dashboard']);
         
       });
   }

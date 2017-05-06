@@ -1,6 +1,7 @@
 <div class="chart-releases">
   <button md-button class="install"
-      (click)="install()"><md-icon>get_app</md-icon> install</button>
+      (click)="toggleLoad(); install()"><md-icon>get_app</md-icon> install</button>
+  <md-spinner *ngIf="loading" color="accent" class="app-spinner"></md-spinner>
   <div *ngIf="releases">
     <h4>Releases:</h4>
     <md-list>

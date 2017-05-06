@@ -19,4 +19,5 @@ export class Release {
   namespace: string;
   version: number;
   chart: Chart;
+  loading: boolean;
 }

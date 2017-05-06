@@ -22,3 +22,10 @@ comp-bar {
   top: -1em;
   position: relative;
 }
+
+md-spinner {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+  float: right;
+}
