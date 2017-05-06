@@ -109,16 +109,24 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	case "PATCH":
 		decoder := json.NewDecoder(r.Body)
-		var newRepo map[string]interface{}
-		err := decoder.Decode(&newRepo)
+		var patchBody map[string]string
+		err := decoder.Decode(&patchBody)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 		defer r.Body.Close()
-		log.Println(newRepo)
+
+		// we are patching a release, but we need to figure out the associated chart
+		release, err := c.helmClient.ReleaseContent(vars["release"])
+		if err != nil {
+			log.Printf("failed to get release: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		_, err = c.helmClient.UpdateReleaseFromChart(vars["release"], release.Release.Chart, helm.UpdateValueOverrides([]byte(patchBody["data"])))
 		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
 		if err != nil {
-			log.Printf("failed to write json: %s", err)
+			log.Printf("failed to update release: %s", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	case "OPTIONS":
