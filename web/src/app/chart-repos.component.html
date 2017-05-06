@@ -17,14 +17,20 @@
         <md-list>
           <md-list-item *ngFor="let repo of repos"
               (click)="gotoDetail(repo)">
+            <md-icon>directions_boat</md-icon>
             <span class="name">{{repo.name}}</span>
             <span class="url">{{repo.url}}</span>
-            <md-icon class="delete" (click)="$event.stopPropagation(); delete(repo.name);">delete</md-icon>   
+            <button md-button (click)="$event.stopPropagation(); delete(repo.name);">
+              <md-icon>delete</md-icon> delete
+            </button> 
           </md-list-item>
         </md-list>
       </md-card-content>
     </md-card>
-    <button md-button (click)="goBack()">
-      <md-icon>arrow_back</md-icon>
-    </button>
-
+    <md-card>
+      <md-card-content>
+        <button md-button (click)="goBack()">
+          <md-icon>arrow_back</md-icon> back
+        </button>
+      </md-card-content>
+    </md-card>

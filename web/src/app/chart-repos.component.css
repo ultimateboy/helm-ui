@@ -4,6 +4,7 @@ md-list-item {
   position: relative;
   left: 0;
   background-color: #EEE;
+  border: 1px solid black;
 }
 md-list-item:hover {
   background-color: #DDD;
@@ -15,12 +16,7 @@ span.name {
   left: -1px;
 }
 
-.delete:hover {
-  color: red;
-  left: 1px;
-  cursor: pointer;
-}
-.delete {
+md-list button {
   float:right !important;
   margin-left: 10em;
 }
