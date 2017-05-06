@@ -1,3 +1,8 @@
+
+export class CTemplate {
+  name: string;
+  data: string;
+}
 export class Metadata {
   version: string;
   name: string;
@@ -6,6 +11,7 @@ export class Metadata {
 
 export class Chart {
   metadata: Metadata;
+  templates: CTemplate[];
 }
 
 export class Release {
