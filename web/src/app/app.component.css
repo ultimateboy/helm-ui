@@ -1,3 +1,41 @@
+span.title {
+    font-size: 1.2em;
+}
+
+div.title-bar a:link    {
+  /* Applies to all unvisited links */
+  text-decoration:  none;
+  font-weight:      bold;
+  background-color: #ddd;
+  color:            blue;
+  } 
+div.title-bar a:visited {
+  /* Applies to all visited links */
+  text-decoration:  none;
+  font-weight:      bold;
+  background-color: #ddd;
+  color:            #f0f;
+  } 
+div.title-bar a:hover   {
+  /* Applies to links under the pointer */
+  text-decoration:  none;
+  font-weight:      bold;
+  background-color: blue;
+  color:            #fff;
+  } 
+div.title-bar a:active  {
+  /* Applies to activated links */
+  text-decoration:  underline;
+  font-weight:      bold;
+  background-color: black;
+  color: white;
+  } 
+
 button {
     font-size: 110% !important;
+}
+
+md-icon.logo {
+    font-size: 2.1em;
+    position: inline-block;
 }

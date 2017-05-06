@@ -1,13 +1,24 @@
-<h2>Releases</h2>
+<h2>Dashboard</h2>
 
-<md-card>
+<md-card class="heroes" *ngFor="let release of releases">
   <md-card-content>
-    <md-list class="heroes">
-      <md-list-item *ngFor="let release of releases">
-        <span class="badge">{{release.chart.metadata.name}}</span>
-        <span>{{release.name}}</span>
-        <md-icon class="delete" (click)="$event.stopPropagation(); delete(release.name);">delete</md-icon>
-      </md-list-item>
-    </md-list>
+    <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3>
+    <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
+    <p>{{release.chart.metadata.description}}</p>
+    <button color="primary" md-button (click)="openEditDialog(release.name, release.config.raw, release.chart.values.raw)">
+      <md-icon>settings</md-icon>&nbsp;config
+    </button>
+    <button color="primary" md-button (click)="$event.stopPropagation(); delete(release.name);">
+      <md-icon>delete</md-icon>&nbsp;delete
+    </button>
   </md-card-content>
 </md-card>
+
+
+<span class="app-action">
+  <a routerLink="/chart-repos">
+    <button class="app-button" md-fab>
+      <md-icon>add circle</md-icon>
+    </button>
+  </a>
+</span>

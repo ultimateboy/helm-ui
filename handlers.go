@@ -107,8 +107,30 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+	case "PATCH":
+		decoder := json.NewDecoder(r.Body)
+		var patchBody map[string]string
+		err := decoder.Decode(&patchBody)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		defer r.Body.Close()
+
+		// we are patching a release, but we need to figure out the associated chart
+		release, err := c.helmClient.ReleaseContent(vars["release"])
+		if err != nil {
+			log.Printf("failed to get release: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		_, err = c.helmClient.UpdateReleaseFromChart(vars["release"], release.Release.Chart, helm.UpdateValueOverrides([]byte(patchBody["data"])))
+		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
+		if err != nil {
+			log.Printf("failed to update release: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	case "OPTIONS":
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	}
 }

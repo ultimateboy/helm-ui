@@ -1,52 +1,20 @@
-.selected {
-  background-color: #CFD8DC !important;
-  color: white;
-}
-.heroes {
-  margin: 0 0 2em 0;
-  list-style-type: none;
-  padding: 0;
-  width: 50em;
-}
-.heroes md-list-item {
-  cursor: pointer;
-  position: relative;
-  left: 0;
-  background-color: #EEE;
 
-}
-.heroes md-list-item:hover {
-  color: #607D8B;
-  background-color: #DDD;
-  left: .1em;
-}
-.heroes md-list-item.selected:hover {
-  background-color: #BBD8DC !important;
-  color: white;
-}
-.heroes .text {
-  position: relative;
-  top: -3px;
-}
-.heroes .badge {
+h3 {
   display: inline-block;
-  color: white;
-  padding: 0.8em 0.7em 0 0.7em;
-  background-color: #607D8B;
+  color: black;
   line-height: 1em;
   position: relative;
-  left: -1px;
-  top: -4px;
   height: 1.8em;
-  margin-right: .8em;
-  width: 10em;
+  font-size: 1.4em;
 }
 
-.delete:hover {
-  color: red;
-  left: 1px;
+md-card-content {
+  padding: 0.8em 0.7em 0 0.7em;
 }
-.delete {
-  float:right !important;
-  margin-left: 10em;
+
+.app-action {
+    display: inline-block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }

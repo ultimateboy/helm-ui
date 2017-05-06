@@ -49,4 +49,12 @@ export class ReleaseService {
       .catch(this.handleError);
   }
 
+  updateValues(name: string, data: string): Promise<Response> {
+    return this.http
+      .patch(this.releasesUrl + '/'+name, JSON.stringify({data: data}), {headers: this.headers})
+      .toPromise()
+      .then(res => res.json() as Response)
+      .catch(this.handleError);
+  }
+
 }
