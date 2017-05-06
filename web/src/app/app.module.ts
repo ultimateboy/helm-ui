@@ -7,6 +7,7 @@ import { HttpModule }    from '@angular/http';
 import {MaterialModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent }         from './app.component';
@@ -18,6 +19,8 @@ import { ChartReleasesComponent } from './chart-releases.component'
 
 import { ReleaseService }          from './release.service';
 import { ChartRepoService }          from './chart-repo.service';
+
+import { CompBarComponent } from './comp-bar.component';
 
 @NgModule({
   imports: [
@@ -34,7 +37,8 @@ import { ChartRepoService }          from './chart-repo.service';
     ReleasesComponent,
     ChartRepoDetailComponent,
     ChartReleasesComponent,
-    DialogContentComponent
+    DialogContentComponent,
+    CompBarComponent
   ],
   providers: [ 
     ReleaseService,

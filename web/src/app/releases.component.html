@@ -1,8 +1,9 @@
 <h2>Dashboard</h2>
 
-<md-card class="heroes" *ngFor="let release of releases">
+<md-card class="releases" *ngFor="let release of releases">
   <md-card-content>
     <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3>
+    <comp-bar [templates]="release.chart.templates"></comp-bar>
     <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
     <p>{{release.chart.metadata.description}}</p>
     <button color="primary" md-button (click)="openEditDialog(release.name, release.config.raw, release.chart.values.raw)">

@@ -1,0 +1,8 @@
+
+<div class='comp-bar'>
+  <div *ngFor="let block of blocks" 
+      [class]="block.resource.toLowerCase()"
+      [style.width.%]="block.size"
+      md-tooltip="{{ block.resource }}">
+  </div>
+</div>

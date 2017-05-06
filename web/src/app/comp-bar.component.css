@@ -1,0 +1,29 @@
+div.comp-bar {
+  display: block;
+  width: 15em;
+  min-height: 0.5em;
+}
+
+div.comp-bar div {
+  display: inline-block;
+  min-height: 0.5em;
+}
+
+div.ingress {
+  background-color: green;
+}
+div.configmap {
+  background-color: blue;
+}
+div.service {
+  background-color: red;
+}
+div.deployment {
+  background-color: purple;
+}
+div.persistentvolumeclaim {
+  background-color: pink;
+}
+div.secret {
+  background-color: black;
+}
