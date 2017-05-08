@@ -13,7 +13,11 @@
       <h3>{{chart.name }}</h3>
       <span class="chart-icon"><img src="{{chart.icon}}" /></span>
       <span>{{ chart.description }} </span>
-      <chart-releases [repoName]="repo" [chartName]="chart.name"></chart-releases>
+      <br />
+      <button md-button class="install"
+        (click)="toggleLoad(); install(chart.name, repo)"><md-icon>get_app</md-icon> install</button>
+      <md-spinner *ngIf="loading" color="accent" class="app-spinner"></md-spinner>
+
     </md-card-content>
   </md-card>
 
