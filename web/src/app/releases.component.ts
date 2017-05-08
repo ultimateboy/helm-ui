@@ -70,6 +70,9 @@ export class ReleasesComponent implements OnInit {
       if (result) {
         console.log(result);
         this.releaseService.updateValues(name, result)
+          .then(release => {
+            console.log(release)
+          });
       }
     })
   }

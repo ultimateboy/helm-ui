@@ -123,8 +123,8 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
-		_, err = c.helmClient.UpdateReleaseFromChart(vars["release"], release.Release.Chart, helm.UpdateValueOverrides([]byte(patchBody["data"])))
-		err = json.NewEncoder(w).Encode(map[string]bool{"status": true})
+		updatedResp, err := c.helmClient.UpdateReleaseFromChart(vars["release"], release.Release.Chart, helm.UpdateValueOverrides([]byte(patchBody["data"])))
+		err = json.NewEncoder(w).Encode(updatedResp.Release)
 		if err != nil {
 			log.Printf("failed to update release: %s", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
