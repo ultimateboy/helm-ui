@@ -61,17 +61,22 @@ export class ReleasesComponent implements OnInit {
       });
 }
 
-  openEditDialog(name: string, config: string, values: string) {
+  openEditDialog(rel: Release) {
     const dialogRef = this._dialog.open(DialogContentComponent, {
-      data: {'config':config, 'values':values},
+      data: {'config':rel.config.raw, 'values':rel.chart.values.raw},
     });
     dialogRef.afterClosed().subscribe(result => {
       this.dialogResp = result;
       if (result) {
-        console.log(result);
-        this.releaseService.updateValues(name, result)
+        this.toggleLoad(rel);
+
+        this.releaseService.updateValues(rel.name, result)
           .then(release => {
-            console.log(release)
+            for (var i = 0; i < this.releases.length; i++) {
+              if (this.releases[i].name == release.name) {
+                this.releases[i] = release;
+              }
+            }
           });
       }
     })

@@ -26,17 +26,10 @@ export class CompBarComponent implements OnInit {
   name: string; 
   blocks: CBlock[];
   resources: string[];
-  someobj: any;
 
   constructor() { 
     this.blocks = [];
     this.resources = [];
-    // this.resources.push('ConfigMap');
-    // this.resources.push('Ingress');
-    // this.resources.push('Deployment');
-    // this.resources.push('Deployment');
-
-
   }
 
   ngOnInit(): void {
@@ -44,7 +37,6 @@ export class CompBarComponent implements OnInit {
       var decoded = atob(this.templates[i].data);
       var matches = decoded.match(/kind\: (\w+)/);
       if (matches) {
-        console.log(matches[1])
         this.resources.push(matches[1]);
       }
     }
@@ -65,6 +57,5 @@ export class CompBarComponent implements OnInit {
       this.blocks.push(b)
     }
     
-    console.log(this.blocks);
   }
 }
