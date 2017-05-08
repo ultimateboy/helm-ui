@@ -34,6 +34,7 @@ export class CompBarComponent implements OnInit {
 
   ngOnInit(): void {
     for (var i = 0; i < this.templates.length; i++) {
+      console.log(this.templates[i]);
       var decoded = atob(this.templates[i].data);
       var matches = decoded.match(/kind\: (\w+)/);
       if (matches) {
