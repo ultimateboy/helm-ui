@@ -3,4 +3,5 @@ export class Chart {
   description: string;
   home: string;
   icon: string;
+  loading: boolean;
 }

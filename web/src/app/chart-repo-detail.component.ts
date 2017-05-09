@@ -21,7 +21,6 @@ export class ChartRepoDetailComponent implements OnInit {
     repo: string;
     charts: Chart[];
     filtered: Chart[] = [];
-    loading: boolean;
 
     constructor(
       private chartRepoService: ChartRepoService,
@@ -47,8 +46,8 @@ export class ChartRepoDetailComponent implements OnInit {
       );
     }
 
-    toggleLoad(): void {
-      this.loading = this.loading ? false : true;
+    toggleLoad(chart: Chart): void {
+      chart.loading = chart.loading ? false : true;
     }
 
     install(name: string, repo: string): void {

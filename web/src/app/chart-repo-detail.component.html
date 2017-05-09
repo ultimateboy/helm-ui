@@ -15,8 +15,8 @@
       <span>{{ chart.description }} </span>
       <br />
       <button md-button class="install"
-        (click)="toggleLoad(); install(chart.name, repo)"><md-icon>get_app</md-icon> install</button>
-      <md-spinner *ngIf="loading" color="accent" class="app-spinner"></md-spinner>
+        (click)="toggleLoad(chart); install(chart.name, repo)"><md-icon>get_app</md-icon> install</button>
+      <md-spinner *ngIf="chart.loading" color="accent" class="app-spinner"></md-spinner>
 
     </md-card-content>
   </md-card>
