@@ -1,9 +1,11 @@
 / {
     gzip
     root /src
+    log stdout
 }
 
 /node_modules/ {
     root /node_modules/
-    browse
+    log stdout
+    gzip
 }

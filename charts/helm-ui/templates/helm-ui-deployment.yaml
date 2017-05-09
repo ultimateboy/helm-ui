@@ -41,8 +41,9 @@ spec:
         image: {{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.org }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         command:
-        - "npm"
-        - "start"
+        - "caddy"
+        - "-conf"
+        - "/etc/Caddyfile"
         ports:
         - containerPort: {{ .Values.frontend.port }}
         volumeMounts:
