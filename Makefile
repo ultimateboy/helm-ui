@@ -10,6 +10,10 @@ MUTABLE_VERSION ?= canary
 MUTABLE_IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}:${MUTABLE_VERSION}
 FRONTEND_MUTABLE_IMAGE := docker.io/${IMAGE_PREFIX}/${SHORT_NAME}-${FRONTEND_SUFFIX}:${MUTABLE_VERSION}
 
+FRONTEND_BUILD_IMAGE := node:boron
+FRONTEND_BUILD_OPTS := --rm -v ${CURDIR}:/web -w /web
+FRONTEND_BUILD_CMD := docker run ${FRONTEND_BUILD_OPTS} ${FRONTEND_BUILD_IMAGE}
+
 DEV_ENV_IMAGE := quay.io/deis/go-dev:0.20.0
 DEV_ENV_WORK_DIR := /go/src/${REPO_PATH}
 DEV_ENV_OPTS := --rm -v ${CURDIR}:${DEV_ENV_WORK_DIR} -w ${DEV_ENV_WORK_DIR}
@@ -31,7 +35,7 @@ install-deps:
 bootstrap:
 	glide install
 
-build: build-binary-in-container build-image build-frontend-image
+build: build-binary-in-container build-image build-frontend-in-container build-frontend-image
 push: docker-push docker-frontend-push
 
 run-interactive:
@@ -50,6 +54,14 @@ build-image:
 	 	--build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` \
 		-t ${IMAGE} rootfs
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
+
+build-frontend:
+	cd web && \
+	npm install && \
+	npm run build
+
+build-frontend-in-container:
+	${FRONTEND_BUILD_CMD} make build-frontend
 
 build-frontend-image:
 	docker build \
