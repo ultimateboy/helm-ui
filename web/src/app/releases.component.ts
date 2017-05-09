@@ -62,8 +62,9 @@ export class ReleasesComponent implements OnInit {
 }
 
   openEditDialog(rel: Release) {
+    let configData = rel.config.raw ? rel.config.raw.trim():"";
     const dialogRef = this._dialog.open(DialogContentComponent, {
-      data: {'config':rel.config.raw, 'values':rel.chart.values.raw},
+      data: {'config':configData, 'values':rel.chart.values.raw},
     });
     dialogRef.afterClosed().subscribe(result => {
       this.dialogResp = result;
