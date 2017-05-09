@@ -15,7 +15,6 @@ import { ChartReposComponent }   from './chart-repos.component';
 import { ChartRepoDetailComponent } from './chart-repo-detail.component';
 
 import { ReleasesComponent, DialogContentComponent }      from './releases.component';
-import { ChartReleasesComponent } from './chart-releases.component'
 
 import { ReleaseService }          from './release.service';
 import { ChartRepoService }          from './chart-repo.service';
@@ -36,7 +35,6 @@ import { CompBarComponent } from './comp-bar.component';
     ChartReposComponent,
     ReleasesComponent,
     ChartRepoDetailComponent,
-    ChartReleasesComponent,
     DialogContentComponent,
     CompBarComponent
   ],

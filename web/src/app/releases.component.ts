@@ -14,6 +14,7 @@ export class ReleasesComponent implements OnInit {
   releases: Release[];
   selectedRelease: Release;
   dialogResp: string;
+  loading: boolean;
 
   constructor(
     private router: Router,
@@ -27,6 +28,10 @@ export class ReleasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getReleases();
+  }
+
+  toggleLoad(r: Release): void {
+    r.loading = r.loading ? false: true; 
   }
 
   onSelect(release: Release): void {
@@ -54,17 +59,25 @@ export class ReleasesComponent implements OnInit {
       .then(response => {
         this.releases = this.releases.filter(rel => rel.name !== name)
       });
-  }
+}
 
-  openEditDialog(name: string, config: string, values: string) {
+  openEditDialog(rel: Release) {
     const dialogRef = this._dialog.open(DialogContentComponent, {
-      data: {'config':config, 'values':values},
+      data: {'config':rel.config.raw, 'values':rel.chart.values.raw},
     });
     dialogRef.afterClosed().subscribe(result => {
       this.dialogResp = result;
       if (result) {
-        console.log(result);
-        this.releaseService.updateValues(name, result)
+        this.toggleLoad(rel);
+
+        this.releaseService.updateValues(rel.name, result)
+          .then(release => {
+            for (var i = 0; i < this.releases.length; i++) {
+              if (this.releases[i].name == release.name) {
+                this.releases[i] = release;
+              }
+            }
+          });
       }
     })
   }

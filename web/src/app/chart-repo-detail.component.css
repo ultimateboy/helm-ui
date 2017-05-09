@@ -12,5 +12,11 @@ h3 {
 
 .chart-icon img {
   max-width: 10em;
+}
+
+md-spinner {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
 
 }

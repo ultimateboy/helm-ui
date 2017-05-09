@@ -1,12 +1,12 @@
 div.comp-bar {
   display: block;
-  width: 15em;
-  min-height: 0.5em;
+  width: 18em;
+  min-height: 0.7em;
 }
 
 div.comp-bar div {
   display: inline-block;
-  min-height: 0.5em;
+  min-height: 0.7em;
 }
 
 div.ingress {
