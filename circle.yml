@@ -1,0 +1,19 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - make install-deps bootstrap
+
+test:
+  override:
+    - mkdir -p $GOPATH/{bin,src}
+    - make build
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL docker.io
+      - make push

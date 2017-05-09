@@ -1,7 +1,6 @@
 FROM alpine:3.5
 
 ARG plugins=http.cors,http.ipfilter,http.minify
-ARG BUILD_DATE
 
 RUN apk upgrade --no-cache --available \
   && apk add --no-cache \
@@ -19,6 +18,8 @@ RUN curl --silent --show-error --fail --location \
     | tar --no-same-owner -C /usr/bin/ -xz caddy \
  && chmod 0755 /usr/bin/caddy \
  && /usr/bin/caddy -version
+
+COPY ./node_modules /node_modules
 
 COPY . /
 
