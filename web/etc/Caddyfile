@@ -1,10 +1,10 @@
-/ {
+:2015 {
     gzip
     root /src
     log stdout
 }
 
-/node_modules/ {
+:2015/node_modules/ {
     root /node_modules/
     log stdout
     gzip
