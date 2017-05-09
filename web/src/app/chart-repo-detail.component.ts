@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import { Location }                 from '@angular/common';
+import { Router }            from '@angular/router';
 
 import { ChartRepoService } from './chart-repo.service';
 import { ChartRepo } from './chart-repo'
@@ -24,7 +25,8 @@ export class ChartRepoDetailComponent implements OnInit {
     constructor(
       private chartRepoService: ChartRepoService,
       private route: ActivatedRoute,
-      private location: Location
+      private location: Location,
+      private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -42,6 +44,17 @@ export class ChartRepoDetailComponent implements OnInit {
       this.filtered = Object.assign([], this.charts).filter(
           item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
       );
+    }
+
+    toggleLoad(chart: Chart): void {
+      chart.loading = chart.loading ? false : true;
+    }
+
+    install(name: string, repo: string): void {
+      this.chartRepoService.install(name, repo)
+        .then(release => {
+          this.router.navigate(['/dashboard']);
+        });
     }
 
     goBack(): void {

@@ -1,12 +1,26 @@
-<h2>Releases</h2>
+<h2>Dashboard</h2>
 
-<ul class="heroes">
-  <li *ngFor="let release of releases" (click)="onSelect(release)"
-      [class.selected]="release === selectedRelease">
-    <span class="badge">{{release.chart.metadata.name}}</span>
-    <span>{{release.name}}</span>
-    <button class="delete"
-      (click)="$event.stopPropagation(); delete(release.name);">x</button>
-  </li>
-</ul>
+<md-card class="releases" *ngFor="let release of releases">
+  <md-card-content>
+    <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3><md-spinner *ngIf="release.loading" color="accent" class="app-spinner"></md-spinner>
 
+    <comp-bar [templates]="release.chart.templates"></comp-bar>
+    <div (click)="toggleLoad(release);"><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
+    <p>{{release.chart.metadata.description}}</p>
+    <button color="primary" md-button (click)="openEditDialog(release)">
+      <md-icon>settings</md-icon>&nbsp;config
+    </button>
+    <button color="primary" md-button (click)="toggleLoad(release); $event.stopPropagation(); delete(release.name);">
+      <md-icon>delete</md-icon>&nbsp;delete
+    </button>
+  </md-card-content>
+</md-card>
+
+
+<span class="app-action">
+  <a routerLink="/chart-repos">
+    <button class="app-button" md-fab>
+      <md-icon>add circle</md-icon>
+    </button>
+  </a>
+</span>

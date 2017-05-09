@@ -1,15 +1,31 @@
 <div *ngIf="charts">
   <h2>Charts from {{ repo }}</h2>
-  <input #myInput (input)="filterCharts(myInput.value)" />
-  <ul class="heroes">
-  <li *ngFor="let chart of filtered">
-    <span class="badge">{{chart.name }}</span>
-    <span><img src="{{chart.icon}}" /></span>
-    <span>{{ chart.description }} </span>
-    <chart-releases [repoName]="repo" [chartName]="chart.name"></chart-releases>
-  </li>
-  </ul>
+  <md-input-container>
+    <input mdInput placeholder="search" #myInput (input)="filterCharts(myInput.value)" />
+    <span md-prefix>
+      <i class="material-icons app-input-icon">search</i>
+      &nbsp;
+    </span>
+  </md-input-container>
 
+  <md-card class="app-input-section" *ngFor="let chart of filtered">
+    <md-card-content>
+      <h3>{{chart.name }}</h3>
+      <span class="chart-icon"><img src="{{chart.icon}}" /></span>
+      <span>{{ chart.description }} </span>
+      <br />
+      <button md-button class="install"
+        (click)="toggleLoad(chart); install(chart.name, repo)"><md-icon>get_app</md-icon> install</button>
+      <md-spinner *ngIf="chart.loading" color="accent" class="app-spinner"></md-spinner>
 
-  <button (click)="goBack()">Back</button>
+    </md-card-content>
+  </md-card>
+
+    <md-card>
+      <md-card-content class="app-action">
+        <button md-button (click)="goBack()">
+          <md-icon>arrow_back</md-icon> back
+        </button>
+      </md-card-content>
+    </md-card>
 </div>

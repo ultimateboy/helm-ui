@@ -20,7 +20,7 @@ api:
 
 frontend:
   name: frontend
-  port: 3000
+  port: 2015
   serviceType: NodePort
   domain: frontend
   
