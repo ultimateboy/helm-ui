@@ -15,5 +15,5 @@ deployment:
   staging:
     branch: master
     commands:
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL docker.io
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
       - make push
