@@ -144,6 +144,31 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c ServerContext) ReleaseHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	switch r.Method {
+	case "GET":
+		_, ok := vars["release"]
+		if ok {
+			resp, err := c.helmClient.ReleaseHistory(vars["release"])
+			if err != nil {
+				log.Printf("failed to get release history: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			err = json.NewEncoder(w).Encode(resp.Releases)
+			if err != nil {
+				log.Printf("failed to write json: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		}
+		return
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+}
+
 func (c ServerContext) AddHelmRepoHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var newRepo HelmRepo
