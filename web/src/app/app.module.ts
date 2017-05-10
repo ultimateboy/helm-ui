@@ -20,6 +20,7 @@ import { ReleaseService }          from './release.service';
 import { ChartRepoService }          from './chart-repo.service';
 
 import { CompBarComponent } from './comp-bar.component';
+import { ReleaseNotesComponent } from './release-notes.component'
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { CompBarComponent } from './comp-bar.component';
     ReleasesComponent,
     ChartRepoDetailComponent,
     DialogContentComponent,
-    CompBarComponent
+    CompBarComponent,
+    ReleaseNotesComponent
   ],
   providers: [ 
     ReleaseService,

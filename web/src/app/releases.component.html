@@ -7,6 +7,7 @@
     <comp-bar [templates]="release.chart.templates"></comp-bar>
     <div (click)="toggleLoad(release);"><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
     <p>{{release.chart.metadata.description}}</p>
+    <release-notes [releaseName]="release.name"></release-notes>
     <button color="primary" md-button (click)="openEditDialog(release)">
       <md-icon>settings</md-icon>&nbsp;config
     </button>
