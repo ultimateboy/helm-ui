@@ -1,0 +1,14 @@
+div.toggle {
+  cursor: pointer;
+}
+.release-notes pre {
+  background-color: black;
+  color: white;
+  padding: 1em;
+  width: 50em;
+  height: 10em;
+  overflow: auto;
+  word-break: normal !important;
+  word-wrap: normal !important;
+  white-space: pre !important;
+}

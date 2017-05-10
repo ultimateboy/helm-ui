@@ -16,8 +16,6 @@ make build
 
 ## Deploying
 ```bash
-helm install --set dashboard.domain=traefik.helm.tucker.me charts/helm-ui
+helm install --set basedomain=helm.example.com charts/helm-ui
 ```
 
-
-// helm install --name traefik --namespace kube-system --set dashboard.enabled=true,dashboard.domain=traefik.helm.tucker.me stable/traefik

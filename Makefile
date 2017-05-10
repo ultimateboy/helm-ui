@@ -35,6 +35,7 @@ install-deps:
 bootstrap:
 	glide install
 
+
 build: build-binary-in-container build-image build-frontend-in-container build-frontend-image
 push: docker-push docker-frontend-push
 
@@ -88,8 +89,6 @@ docker-immutable-push:
 docker-mutable-push:
 	docker push ${MUTABLE_IMAGE}
 
-
-ci: test
 
 test: test-unit
 
