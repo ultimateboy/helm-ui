@@ -81,11 +81,20 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 
 			}
+
+			statusResp, err := c.helmClient.ReleaseStatus(resp.Release.Name)
+			if err != nil {
+				log.Println(err)
+			}
+
+			resp.Release.Info.Status = statusResp.Info.Status
+
 			err = json.NewEncoder(w).Encode(resp.Release)
 			if err != nil {
 				log.Printf("failed to write json: %s", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
+
 			return
 		}
 		// get all releases
