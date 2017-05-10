@@ -6,10 +6,10 @@ import { ReleasesComponent }      from './releases.component';
 import { ChartRepoDetailComponent } from './chart-repo-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   { path: 'chart-repos',  component: ChartReposComponent },
   { path: 'chart-repos/detail/:name', component: ChartRepoDetailComponent },
-  { path: 'dashboard',     component: ReleasesComponent }
+  { path: '',     component: ReleasesComponent }
 ];
 
 @NgModule({

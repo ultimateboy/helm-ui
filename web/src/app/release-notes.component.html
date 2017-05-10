@@ -1,0 +1,13 @@
+
+<div *ngIf="release" class='release-notes'>
+  <div class="toggle" (click)="toggleShow();">
+    <md-icon>keyboard_arrow_down</md-icon>
+    <label>Notes</label>
+  </div>
+  <div *ngIf="show">
+    <pre>
+{{ release.info.status.resources }}
+{{ release.info.status.notes }}
+    </pre>
+  </div>
+</div>
