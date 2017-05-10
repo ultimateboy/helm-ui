@@ -1,11 +1,12 @@
 :2015 {
-    gzip
     root /src
     log stdout
+    rewrite {
+        to {path} {path}/ /index.html
+    }
 }
 
 :2015/node_modules/ {
     root /node_modules/
     log stdout
-    gzip
 }
