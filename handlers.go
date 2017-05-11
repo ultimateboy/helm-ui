@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/ericchiang/k8s"
@@ -160,6 +161,49 @@ func (c ServerContext) ReleaseHistoryHandler(w http.ResponseWriter, r *http.Requ
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			err = json.NewEncoder(w).Encode(resp.Releases)
+			if err != nil {
+				log.Printf("failed to write json: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		}
+		return
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+}
+
+func (c ServerContext) ReleaseRevertHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	switch r.Method {
+	case "POST":
+		_, ok := vars["release"]
+		if ok {
+			_, ok := vars["revision"]
+			if !ok {
+				return
+			}
+			version, err := strconv.Atoi(vars["revision"])
+			if err != nil {
+				log.Printf("failed to get revision: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			resp, err := c.helmClient.RollbackRelease(
+				vars["release"],
+				helm.RollbackDryRun(false),
+				helm.RollbackRecreate(false),
+				helm.RollbackDisableHooks(false),
+				helm.RollbackVersion(int32(version)),
+				helm.RollbackTimeout(300),
+				helm.RollbackWait(false),
+			)
+			if err != nil {
+				log.Printf("failed to revert release: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			err = json.NewEncoder(w).Encode(resp.Release)
 			if err != nil {
 				log.Printf("failed to write json: %s", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
