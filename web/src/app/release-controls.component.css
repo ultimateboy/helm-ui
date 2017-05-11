@@ -16,6 +16,4 @@ div.toggle {
 md-spinner {
   width: 2em;
   height: 2em;
-  display: inline-block;
-  float: right;
 }
