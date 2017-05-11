@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/ericchiang/k8s"
@@ -151,7 +152,9 @@ func (c ServerContext) ReleaseHistoryHandler(w http.ResponseWriter, r *http.Requ
 	case "GET":
 		_, ok := vars["release"]
 		if ok {
-			resp, err := c.helmClient.ReleaseHistory(vars["release"])
+			// helm does not seem to like to run this comman din paralell
+			cli := helm.NewClient(helm.Host(os.Getenv("TILLER_HOST")))
+			resp, err := cli.ReleaseHistory(vars["release"], helm.WithMaxHistory(256))
 			if err != nil {
 				log.Printf("failed to get release history: %s", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -12,3 +12,10 @@ div.toggle {
   word-wrap: normal !important;
   white-space: pre !important;
 }
+
+md-spinner {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+  float: right;
+}

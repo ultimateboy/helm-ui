@@ -1,19 +1,17 @@
-<h2>Dashboard</h2>
-
+<md-card>
+  <md-card-content>
+    <h2>Dashboard</h2>
+  </md-card-content>
+</md-card>
 <md-card class="releases" *ngFor="let release of releases">
   <md-card-content>
     <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3><md-spinner *ngIf="release.loading" color="accent" class="app-spinner"></md-spinner>
 
     <comp-bar [templates]="release.chart.templates"></comp-bar>
-    <div (click)="toggleLoad(release);"><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
+    <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>
     <p>{{release.chart.metadata.description}}</p>
-    <release-notes [releaseName]="release.name"></release-notes>
-    <button color="primary" md-button (click)="openEditDialog(release)">
-      <md-icon>settings</md-icon>&nbsp;config
-    </button>
-    <button color="primary" md-button (click)="toggleLoad(release); $event.stopPropagation(); delete(release.name);">
-      <md-icon>delete</md-icon>&nbsp;delete
-    </button>
+
+    <release-controls [ParentReleases]="releases" [releaseName]="release.name" (outputEvent)= "onComponentChange($event)"></release-controls>
   </md-card-content>
 </md-card>
 
