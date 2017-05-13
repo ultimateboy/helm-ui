@@ -5,10 +5,10 @@
     <md-icon>history</md-icon>&nbsp;History
 </button>
 <button color="primary" md-button (click)="openEditDialog(release)">
-  <md-icon>settings</md-icon>&nbsp;config
+  <md-icon>settings</md-icon>&nbsp;Config
 </button>
 <button color="primary" md-button (click)="toggleLoad(); $event.stopPropagation(); delete(release.name);">
-  <md-icon>delete</md-icon>&nbsp;delete
+  <md-icon>delete</md-icon>&nbsp;Delete
 </button>
 
 <div *ngIf="release" class='release-notes'>
@@ -39,6 +39,11 @@
           <td>{{ release.info.status.code | status }}</td>
           <td>{{ release.chart.metadata.name }}</td>
           <td>{{ release.info.Description}}</td> 
+          <td>
+            <button *ngIf="release.info.status.code != 1" md-button (click)="loading=true;rollback(release.name, i+1)">
+              <md-icon>undo</md-icon> Rollback
+            </button>
+          </td>
         </tr>
       <tbody>
     </table>

@@ -5,7 +5,7 @@
 </md-card>
 <md-card class="releases" *ngFor="let release of releases">
   <md-card-content>
-    <h3>{{release.name}} - ({{release.chart.metadata.name}})</h3><md-spinner *ngIf="release.loading" color="accent" class="app-spinner"></md-spinner>
+    <h3>{{release.name}} - ({{release.chart.metadata.name}}) <md-icon [style.color]="statusColor(release.info.status.code)" md-tooltip="{{release.info.status.code | status}}" class="status-flag">flag</md-icon></h3><md-spinner *ngIf="release.loading" color="accent" class="app-spinner"></md-spinner>
 
     <comp-bar [templates]="release.chart.templates"></comp-bar>
     <div><label>namespace:</label>&nbsp;{{release.namespace}}&nbsp;<label>version:</label>&nbsp;{{release.version}}</div>

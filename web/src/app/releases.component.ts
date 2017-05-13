@@ -1,7 +1,7 @@
 import { Component, OnInit, Optional, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Release } from './release';
+import { Release, STATUSES } from './release';
 import { ReleaseService } from './release.service';
 
 @Component({
@@ -25,7 +25,26 @@ export class ReleasesComponent implements OnInit {
     this.getReleases();
   }
 
-
+  statusColor(status: number): string {
+    switch (STATUSES[status]) {
+        case 'UNKNOWN': // Error: Fallthrough case in switch.
+            return 'grey';
+        case 'DEPLOYED':
+            return 'green';
+        case 'DELETED':
+            return 'black';
+        case 'SUPERSEDED':
+            return 'grey';
+        case 'FAILED':
+            return 'red';
+        case 'UNKNOWN':
+            return 'grey';
+        case 'DELETING':
+            return 'grey';
+        default:
+            return 'grey';
+    }
+  }
   onSelect(release: Release): void {
     this.selectedRelease = release;
   }

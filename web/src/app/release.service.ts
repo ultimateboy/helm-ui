@@ -64,6 +64,14 @@ export class ReleaseService {
       .catch(this.handleError);
   }
 
+  rollback(name: string, revision: number): Promise<Release> {
+    return this.http
+      .post(this.releasesUrl+'/'+name+'/rollback/' + revision, JSON.stringify({name: name}), {headers: this.headers})
+      .toPromise()
+      .then(res => res.json() as Release)
+      .catch(this.handleError);
+  }
+
   updateValues(name: string, data: string): Promise<Release> {
     return this.http
       .patch(this.releasesUrl + '/'+name, JSON.stringify({data: data}), {headers: this.headers})

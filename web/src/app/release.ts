@@ -1,4 +1,13 @@
 
+export var STATUSES = [
+  "UNKNOWN",
+  "DEPLOYED",
+  "DELETED",
+  "SUPERSEDED",
+  "FAILED",
+  "DELETING"
+];
+
 export class CTemplate {
   name: string;
   data: string;

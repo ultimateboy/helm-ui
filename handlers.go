@@ -81,7 +81,7 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Printf("failed to get release: %s", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-
+				return
 			}
 
 			statusResp, err := c.helmClient.ReleaseStatus(resp.Release.Name)
@@ -100,7 +100,14 @@ func (c ServerContext) ReleaseHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// get all releases
-		releases, err := c.helmClient.ListReleases()
+		stats := []release.Status_Code{
+			//release.Status_UNKNOWN,
+			release.Status_DEPLOYED,
+			//release.Status_DELETED,
+			//release.Status_DELETING,
+			release.Status_FAILED,
+		}
+		releases, err := c.helmClient.ListReleases(helm.ReleaseListStatuses(stats))
 		if err != nil {
 			log.Printf("failed to list releases: %v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)

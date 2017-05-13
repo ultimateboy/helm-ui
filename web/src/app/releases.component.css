@@ -23,3 +23,10 @@ comp-bar {
   position: relative;
 }
 
+md-icon.status-flag {
+  display: inline-block;
+}
+
+.green md-icon {
+  color: green;
+}

@@ -55,7 +55,13 @@ export class ReleaseControlsComponent implements OnInit {
         this.outputEvent.emit(name);
       });
   }
-
+  rollback(name: string, revision: number): void {
+    if (!name || !revision) { return; }
+    this.releaseService.rollback(name, revision)
+      .then(release => {
+        console.log(release);
+      });
+  }
   openEditDialog(rel: Release) {
     let configData = rel.config.raw ? rel.config.raw.trim():"";
     const dialogRef = this._dialog.open(DialogContentComponent, {
