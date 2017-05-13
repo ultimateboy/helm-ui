@@ -72,6 +72,14 @@ export class ReleaseService {
       .catch(this.handleError);
   }
 
+  diff(name: string, revision: number): Promise<Response> {
+    return this.http
+      .get(this.releasesUrl+'/'+name+'/diff/' + revision, {headers: this.headers})
+      .toPromise()
+      .then(res => res.json() as Response)
+      .catch(this.handleError);
+  }
+
   updateValues(name: string, data: string): Promise<Release> {
     return this.http
       .patch(this.releasesUrl + '/'+name, JSON.stringify({data: data}), {headers: this.headers})

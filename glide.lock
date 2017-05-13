@@ -1,14 +1,14 @@
-hash: 989d33256cfda3a1e658c42a586d7b202e8dcf36c0321eefb1fa5eb36fa6d23f
-updated: 2017-04-22T12:31:55.439152912-06:00
+hash: 6689a5a2cacd20439badd06752009f30fc6cbb773459bd1494f8ce89ad9847cc
+updated: 2017-05-13T14:03:06.267637601-06:00
 imports:
 - name: github.com/blang/semver
   version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/ericchiang/k8s
   version: bd3351b0ceb817083a3226c152e3a2c9bb2849c9
   subpackages:
-  - api/resource
-  - api/unversioned
   - api/v1
+  - apis/meta/v1
+  - api/unversioned
   - apis/apps/v1alpha1
   - apis/apps/v1beta1
   - apis/authentication/v1
@@ -23,7 +23,6 @@ imports:
   - apis/certificates/v1beta1
   - apis/extensions/v1beta1
   - apis/imagepolicy/v1alpha1
-  - apis/meta/v1
   - apis/policy/v1alpha1
   - apis/policy/v1beta1
   - apis/rbac/v1alpha1
@@ -32,9 +31,10 @@ imports:
   - apis/storage/v1
   - apis/storage/v1beta1
   - runtime
+  - watch/versioned
+  - api/resource
   - runtime/schema
   - util/intstr
-  - watch/versioned
 - name: github.com/facebookgo/symwalk
   version: 42004b9f322246749dd73ad71008b1f3160c0052
 - name: github.com/ghodss/yaml
@@ -43,11 +43,11 @@ imports:
   version: bea32b9cd2d6f55753d94a28e959b13f0244797a
   subpackages:
   - compiler
-  - match
   - syntax
+  - match
   - syntax/ast
-  - syntax/lexer
   - util/runes
+  - syntax/lexer
   - util/strings
 - name: github.com/golang/glog
   version: 44145f04b68cf362d9c4df2182967c2275eaefed
@@ -69,59 +69,64 @@ imports:
   version: 751171607256bb66e64c9f0220c00662420c38e9
   subpackages:
   - ast
+- name: github.com/sergi/go-diff
+  version: feef008d51ad2b3778f85d387ccf91735543008d
+  subpackages:
+  - diffmatchpatch
 - name: golang.org/x/crypto
   version: 1f22c0103821b9390939b6776727195525381532
   subpackages:
-  - cast5
-  - openpgp
-  - openpgp/armor
   - openpgp/clearsign
-  - openpgp/elgamal
-  - openpgp/errors
+  - openpgp
   - openpgp/packet
+  - openpgp/armor
+  - openpgp/errors
   - openpgp/s2k
+  - cast5
+  - openpgp/elgamal
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
-  - context
   - http2
+  - context
   - http2/hpack
-  - internal/timeseries
   - lex/httplex
   - trace
+  - internal/timeseries
 - name: google.golang.org/grpc
   version: b7f1379d3cbbbeb2ca3405852012e237aa05459e
   subpackages:
-  - codes
   - credentials
+  - metadata
+  - codes
   - grpclog
   - internal
-  - metadata
   - naming
-  - peer
   - transport
+  - peer
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/helm
   version: 32562a3040bb5ca690339b9840b6f60f8ce25da4
   subpackages:
-  - pkg/chartutil
-  - pkg/downloader
   - pkg/helm
   - pkg/helm/helmpath
-  - pkg/ignore
-  - pkg/proto/hapi/chart
-  - pkg/proto/hapi/release
-  - pkg/proto/hapi/services
-  - pkg/proto/hapi/version
-  - pkg/provenance
   - pkg/repo
+  - pkg/downloader
+  - pkg/release
+  - pkg/proto/hapi/release
+  - pkg/chartutil
+  - pkg/proto/hapi/chart
+  - pkg/provenance
   - pkg/resolver
-  - pkg/tlsutil
   - pkg/urlutil
+  - pkg/proto/hapi/services
   - pkg/version
+  - pkg/tlsutil
+  - pkg/ignore
+  - pkg/proto/hapi/version
 - name: k8s.io/kubernetes
-  version: ea8f6637b639246faa14a8d5c6f864100fcb77a9
+  version: f07eea23494be1e7c11a8e2cf51bd96d1ec9fdf1
   subpackages:
   - pkg/api
   - pkg/api/errors

@@ -16,14 +16,12 @@ import { ChartRepoDetailComponent } from './chart-repo-detail.component';
 
 import { ReleasesComponent }      from './releases.component';
 
-import { DialogContentComponent } from './release-controls.component';
-
 import { ReleaseService }          from './release.service';
 import { ChartRepoService }          from './chart-repo.service';
 
 import { CompBarComponent } from './comp-bar.component';
 
-import { ReleaseControlsComponent, UnEpochPipe, StatusStringPipe } from './release-controls.component'; 
+import { ReleaseControlsComponent, SafePipe, UnEpochPipe, StatusStringPipe, DialogContentComponent, DiffDialogComponent } from './release-controls.component'; 
 
 @NgModule({
   imports: [
@@ -40,16 +38,18 @@ import { ReleaseControlsComponent, UnEpochPipe, StatusStringPipe } from './relea
     ReleasesComponent,
     ChartRepoDetailComponent,
     DialogContentComponent,
+    DiffDialogComponent,
     CompBarComponent,
     ReleaseControlsComponent,
     UnEpochPipe,
-    StatusStringPipe
+    StatusStringPipe,
+    SafePipe
   ],
   providers: [ 
     ReleaseService,
     ChartRepoService
   ],
-  entryComponents: [ DialogContentComponent ],
+  entryComponents: [ DialogContentComponent, DiffDialogComponent ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

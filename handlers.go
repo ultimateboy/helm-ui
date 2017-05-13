@@ -256,8 +256,6 @@ func (c ServerContext) ReleaseDiffHandler(w http.ResponseWriter, r *http.Request
 				return
 			}
 
-			log.Println(resp.Release.Config.Raw)
-			log.Println(histResp.Releases[version].Config.Raw)
 			dmp := diffmatchpatch.New()
 			diffs := dmp.DiffMain(resp.Release.Config.Raw, histResp.Releases[version].Config.Raw, false)
 

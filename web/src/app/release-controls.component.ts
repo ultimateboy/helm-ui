@@ -84,6 +84,24 @@ export class ReleaseControlsComponent implements OnInit {
     })
   }
 
+ getDiff(name: string, revision: number): void {
+    if (!name || !revision) { return; }
+    this.releaseService.diff(name, revision)
+      .then(response => {
+        console.log(response);
+        this.openDiffDialog(response.diff);
+      });
+ }
+
+ openDiffDialog(diff: string) {
+    const dialogRef = this._dialog.open(DiffDialogComponent, {
+      data: diff,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.dialogResp = result;
+    })
+  }
+
   toggleLoad(): void {
     this.loading = this.loading ? false: true; 
   }
@@ -137,6 +155,31 @@ export class DialogContentComponent {
   ) { }
 }
 
+
+@Component({
+  template: `
+    <div [innerHTML]="data | safe: 'html'" class="diff-content">
+      {{ data }}
+    </div>
+    <button color="accent" md-button (click)="dialogRef.close()">
+      <md-icon>cancel</md-icon> cancel
+    </button>
+  `,
+  styles: [`
+    .diff-content {
+      width: 50em;
+      height: 10em;
+    }
+  `],
+})
+export class DiffDialogComponent {
+  code: string;
+  constructor( 
+    @Optional() public dialogRef: MdDialogRef<DiffDialogComponent>,
+    @Inject(MD_DIALOG_DATA) public data: any
+  ) { }
+}
+
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({name: 'unepoch'})
@@ -167,4 +210,34 @@ export class StatusStringPipe implements PipeTransform {
     
     return statuses[value];
   }
+}
+
+import {DomSanitizer, SafeHtml, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl} from '@angular/platform-browser';
+
+@Pipe({
+	name: 'safe'
+})
+export class SafePipe {
+
+	constructor(protected _sanitizer: DomSanitizer) {
+
+	}
+
+	public transform(value: string, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
+		switch (type) {
+			case 'html':
+				return this._sanitizer.bypassSecurityTrustHtml(value);
+			case 'style':
+				return this._sanitizer.bypassSecurityTrustStyle(value);
+			case 'script':
+				return this._sanitizer.bypassSecurityTrustScript(value);
+			case 'url':
+				return this._sanitizer.bypassSecurityTrustUrl(value);
+			case 'resourceUrl':
+				return this._sanitizer.bypassSecurityTrustResourceUrl(value);
+			default:
+				throw new Error(`Unable to bypass security for invalid type: ${type}`);
+		}
+	}
+
 }
