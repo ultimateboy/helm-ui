@@ -60,6 +60,11 @@ export class ReleaseControlsComponent implements OnInit {
     this.releaseService.rollback(name, revision)
       .then(release => {
         console.log(release);
+        for (var i = 0; i < this.ParentReleases.length; i++) {
+          if (this.ParentReleases[i].name == release.name) {
+            this.ParentReleases[i] = release;
+          }
+        }
       });
   }
   openEditDialog(rel: Release) {
