@@ -47,6 +47,7 @@ func main() {
 	r.HandleFunc("/releases/{release}", serverContext.ReleaseHandler).Methods("GET", "PATCH", "DELETE", "OPTIONS")
 	r.HandleFunc("/releases/{release}/history", serverContext.ReleaseHistoryHandler).Methods("GET")
 	r.HandleFunc("/releases/{release}/rollback/{revision}", serverContext.ReleaseRevertHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/releases/{release}/diff/{revision}", serverContext.ReleaseDiffHandler).Methods("GET", "OPTIONS")
 	r.HandleFunc("/repos", serverContext.HelmRepoHandler).Methods("POST", "GET", "OPTIONS")
 	r.HandleFunc("/repos/{repo}", serverContext.HelmRepoHandler).Methods("DELETE", "OPTIONS")
 	r.HandleFunc("/repos/{repo}/charts", serverContext.HelmRepoChartsHandler).Methods("GET")

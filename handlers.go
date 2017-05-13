@@ -13,6 +13,7 @@ import (
 
 	"github.com/ericchiang/k8s"
 	"github.com/gorilla/mux"
+	"github.com/sergi/go-diff/diffmatchpatch"
 	"k8s.io/helm/pkg/downloader"
 	"k8s.io/helm/pkg/helm"
 	"k8s.io/helm/pkg/helm/helmpath"
@@ -211,6 +212,56 @@ func (c ServerContext) ReleaseRevertHandler(w http.ResponseWriter, r *http.Reque
 			}
 
 			err = json.NewEncoder(w).Encode(resp.Release)
+			if err != nil {
+				log.Printf("failed to write json: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		}
+		return
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+}
+
+func (c ServerContext) ReleaseDiffHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	switch r.Method {
+	case "GET":
+		_, ok := vars["release"]
+		if ok {
+			_, ok := vars["revision"]
+			if !ok {
+				return
+			}
+			version, err := strconv.Atoi(vars["revision"])
+			if err != nil {
+				log.Printf("failed to get revision: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			// helm does not seem to like to run this comman din paralell
+			cli := helm.NewClient(helm.Host(os.Getenv("TILLER_HOST")))
+			histResp, err := cli.ReleaseHistory(vars["release"], helm.WithMaxHistory(256))
+			if err != nil {
+				log.Printf("failed to get release history: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			resp, err := c.helmClient.ReleaseContent(vars["release"])
+			if err != nil {
+				log.Printf("failed to get release: %s", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			log.Println(resp.Release.Config.Raw)
+			log.Println(histResp.Releases[version].Config.Raw)
+			dmp := diffmatchpatch.New()
+			diffs := dmp.DiffMain(resp.Release.Config.Raw, histResp.Releases[version].Config.Raw, false)
+
+			err = json.NewEncoder(w).Encode(map[string]string{"diff": dmp.DiffPrettyHtml(diffs)})
 			if err != nil {
 				log.Printf("failed to write json: %s", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
