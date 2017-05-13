@@ -31,7 +31,14 @@
       '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
       // other libraries
       'rxjs':                      'npm:rxjs',
-      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
+
+      'brace': 'npm:brace',
+      'ng2-ace-editor': 'npm:ng2-ace-editor',
+      'w3c-blob': 'npm:w3c-blob',
+      'buffer': 'npm:buffer',
+      'base64-js': 'npm:base64-js',
+      'ieee754': 'npm:ieee754'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -46,6 +53,30 @@
       },
       rxjs: {
         defaultExtension: 'js'
+      },
+      'ng2-ace-editor': {
+        main: 'ng2-ace-editor',
+        defaultExtension: 'js'
+      },
+      brace: {
+        main: 'index',
+        defaultExtension: 'js'
+      },
+      'w3c-blob': {
+        main: 'index',
+        defaultExtension: 'js'
+      },
+      'buffer': {
+        defaultExtension: 'js',
+        main: 'index'
+      },
+      'base64-js': {
+        defaultExtension: 'js',
+        main: 'index'
+      },
+      'ieee754': {
+        defaultExtension: 'js',
+        main: 'index'
       }
     }
   });

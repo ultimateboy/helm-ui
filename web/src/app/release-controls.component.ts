@@ -11,6 +11,9 @@ import 'rxjs/add/observable/of';
 import { Release } from './release';
 import { ReleaseService } from './release.service';
 
+import { AceEditorComponent } from 'ng2-ace-editor';
+import 'brace'
+import 'brace/mode/yaml'
 
 @Component({
   selector: 'release-controls',
@@ -99,12 +102,11 @@ export class ReleaseControlsComponent implements OnInit {
 
 @Component({
   template: `
-    <textarea #editorInput>
-{{ data.config }}
-    </textarea>
-    <pre>
-{{ data.values }}
-    </pre>
+    <ace-editor
+      #editorInput
+      [(text)]="data.config"
+      [mode]="'yaml'"></ace-editor>
+    <pre>{{ data.values }}</pre>
     <br />
     <button color="accent" md-button (click)="dialogRef.close(editorInput.value)">
       <md-icon>save</md-icon> save
@@ -114,12 +116,13 @@ export class ReleaseControlsComponent implements OnInit {
     </button>
   `,
   styles: [`
-    textarea {
-      width: 50em;
+    ace-editor {
       height: 10em;
+      width: auto;
+      font-family: "Courier New", Courier, monospace !important;
     }
     pre {
-      width: 50em;
+      width: auto;
       height: 10em;
       overflow: auto;
       background-color: #eeeeee;
@@ -130,11 +133,11 @@ export class ReleaseControlsComponent implements OnInit {
   `],
 })
 export class DialogContentComponent {
-  code: string;
+  //text: string = 
   constructor( 
     @Optional() public dialogRef: MdDialogRef<DialogContentComponent>,
     @Inject(MD_DIALOG_DATA) public data: any
-  ) { }
+  ) {}
 }
 
 import { Pipe, PipeTransform } from '@angular/core';
