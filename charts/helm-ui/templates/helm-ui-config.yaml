@@ -10,5 +10,5 @@ metadata:
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
 data:
-  config.ts: |
-    export var APIURL = "http://{{ .Values.api.domain }}.{{ .Values.basedomain }}";
+  config.js: |
+    exports.APIURL = 'http://{{ .Values.api.domain }}.{{ .Values.basedomain }}';

@@ -48,4 +48,4 @@ spec:
         - containerPort: {{ .Values.frontend.port }}
         volumeMounts:
         - name: api-config
-          mountPath: /usr/src/app/src/app/config
+          mountPath: /src/app/config
