@@ -3,8 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule }    from '@angular/http';
 
-//import {MdButtonModule} from '@angular/material';
-import {MaterialModule} from '@angular/material';
+import { MdCardModule, MdIconModule, MdInputModule, MdToolbarModule, MdTooltipModule, MdDialogModule, MdButtonModule, MdListModule, MdProgressSpinnerModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -23,14 +22,25 @@ import { CompBarComponent } from './comp-bar.component';
 
 import { ReleaseControlsComponent, SafePipe, UnEpochPipe, StatusStringPipe, DialogContentComponent, DiffDialogComponent } from './release-controls.component'; 
 
+import {AceEditorModule} from 'ng2-ace-editor';
+
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    MaterialModule.forRoot(),
-    BrowserAnimationsModule
+    MdCardModule,
+    MdToolbarModule,
+    MdIconModule,
+    MdButtonModule,
+    MdListModule,
+    MdInputModule,
+    MdTooltipModule,
+    MdProgressSpinnerModule,
+    MdDialogModule,
+    BrowserAnimationsModule,
+    AceEditorModule,
   ],
   declarations: [
     AppComponent,
